@@ -1,0 +1,997 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
+  Globe,
+  Radio,
+  DollarSign,
+  Shield,
+  Database,
+  AlertTriangle,
+  Save,
+  RefreshCw,
+  Key,
+  RotateCcw,
+  Trash2,
+  Eye,
+  EyeOff,
+  Phone,
+} from 'lucide-react'
+
+interface SystemSettings {
+  _id?: string
+  platformName: string
+  defaultCurrency: string
+  timezone: string
+  dateFormat: string
+  environment: 'production' | 'sandbox'
+  providerName: string
+  providerApiKey: string
+  defaultProviderCostPerPart: number
+  retryPolicy: number
+  deliveryReportWebhookEnabled: boolean
+  globalDefaultPricePerPart: number
+  globalProviderCostPerPart: number
+  defaultChargeOnFailure: boolean
+  defaultRefundOnFailure: boolean
+  requireSenderIdApproval: boolean
+  logAllAdminActions: boolean
+  lockPricingEditsToSuperAdmin: boolean
+  enableIpLogging: boolean
+  defaultSmsEncoding: 'auto' | 'gsm7' | 'ucs2'
+  defaultSenderIdBehavior: string
+  defaultAccountCreditLimit: number
+  smsSendingEnabled: boolean
+  // M-Pesa Configuration
+  mpesaConsumerKey?: string
+  mpesaConsumerSecret?: string
+  mpesaPasskey?: string
+  mpesaShortcode?: string
+  mpesaConfirmationUrl?: string
+  mpesaValidationUrl?: string
+  mpesaCallbackUrl?: string
+  mpesaEnvironment?: 'sandbox' | 'production'
+  mpesaEnabled?: boolean
+}
+
+export default function SuperAdminSettingsPage() {
+  const [settings, setSettings] = useState<SystemSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [showApiKey, setShowApiKey] = useState(false)
+  const [showMpesaCredentials, setShowMpesaCredentials] = useState({
+    consumerKey: false,
+    consumerSecret: false,
+    passkey: false,
+  })
+  const [dangerAction, setDangerAction] = useState<string | null>(null)
+  const [formData, setFormData] = useState<Partial<SystemSettings>>({})
+  const [registeringUrls, setRegisteringUrls] = useState(false)
+  const [simulating, setSimulating] = useState(false)
+  const [simulationData, setSimulationData] = useState({
+    phoneNumber: '',
+    amount: '',
+    billRefNumber: '',
+  })
+
+  useEffect(() => {
+    fetchSettings()
+  }, [])
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true)
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/super-admin/settings', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        if (response.status === 403 || response.status === 401) {
+          window.location.href = '/auth/login'
+          return
+        }
+        throw new Error('Failed to fetch settings')
+      }
+
+      const result = await response.json()
+      setSettings(result.data)
+      setFormData(result.data)
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSave = async () => {
+    try {
+      setSaving(true)
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/super-admin/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        alert(error.error || 'Failed to save settings')
+        return
+      }
+
+      const result = await response.json()
+      setSettings(result.data)
+      setFormData(result.data)
+      alert('Settings saved successfully')
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      alert('Failed to save settings')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDangerAction = async (action: string) => {
+    // These would call specific API endpoints for dangerous actions
+    alert(`Danger action "${action}" would be executed here. This requires separate API endpoints.`)
+    setDangerAction(null)
+  }
+
+  const handleRegisterC2BUrls = async () => {
+    if (!formData.mpesaValidationUrl || !formData.mpesaConfirmationUrl) {
+      alert('Please configure Validation URL and Confirmation URL first')
+      return
+    }
+
+    try {
+      setRegisteringUrls(true)
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/super-admin/mpesa/register-c2b-urls', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert(result.error || 'Failed to register C2B URLs')
+        return
+      }
+
+      alert('C2B URLs registered successfully!')
+    } catch (error) {
+      console.error('Error registering C2B URLs:', error)
+      alert('Failed to register C2B URLs')
+    } finally {
+      setRegisteringUrls(false)
+    }
+  }
+
+  const handleSimulateC2B = async () => {
+    if (!simulationData.phoneNumber || !simulationData.amount) {
+      alert('Please enter phone number and amount')
+      return
+    }
+
+    if (formData.mpesaEnvironment === 'production') {
+      alert('C2B simulation is not supported in production. Use M-Pesa App, USSD, or Sim Toolkit.')
+      return
+    }
+
+    try {
+      setSimulating(true)
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/super-admin/mpesa/simulate-c2b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          phoneNumber: simulationData.phoneNumber,
+          amount: parseFloat(simulationData.amount),
+          billRefNumber: simulationData.billRefNumber || '',
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert(result.error || 'Failed to simulate C2B payment')
+        return
+      }
+
+      alert('C2B payment simulated successfully! Check your callbacks.')
+      setSimulationData({ phoneNumber: '', amount: '', billRefNumber: '' })
+    } catch (error) {
+      console.error('Error simulating C2B:', error)
+      alert('Failed to simulate C2B payment')
+    } finally {
+      setSimulating(false)
+    }
+  }
+
+  const updateField = (field: keyof SystemSettings, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <RefreshCw className="w-8 h-8 animate-spin text-slate-400 mx-auto mb-4" />
+            <p className="text-slate-600">Loading settings...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!settings) {
+    return (
+      <div className="p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <Card className="p-12 text-center border border-slate-200/70 rounded-2xl">
+            <AlertTriangle className="w-12 h-12 text-rose-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Failed to load settings</h3>
+            <p className="text-slate-600 mb-6">Unable to fetch system settings. Please try again.</p>
+            <Button onClick={fetchSettings} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Retry
+            </Button>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-6 lg:p-8 bg-[#F8FAFC] min-h-screen">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-[#020617]">System Settings</h1>
+            <p className="text-[#64748B] mt-1">Global configuration and platform controls</p>
+          </div>
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[#FACC15] hover:bg-[#EAB308] text-[#020617] font-medium"
+          >
+            {saving ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* Warning Banner */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm border-l-4 border-l-amber-500 p-4">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-[#64748B]">
+              <span className="font-medium text-[#020617]">⚠️ Changes here affect all accounts and billing.</span> Proceed carefully.
+            </p>
+          </div>
+        </Card>
+
+        {/* SECTION 1: PLATFORM CONFIGURATION */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <Globe className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">Platform Configuration</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Platform Name</Label>
+              <Input
+                value={formData.platformName || ''}
+                onChange={(e) => updateField('platformName', e.target.value)}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+                placeholder="SignalHub"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Default Currency</Label>
+              <Select
+                value={formData.defaultCurrency || 'KES'}
+                onValueChange={(value) => updateField('defaultCurrency', value)}
+              >
+                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="KES">KES (Kenyan Shilling)</SelectItem>
+                  <SelectItem value="USD">USD (US Dollar)</SelectItem>
+                  <SelectItem value="EUR">EUR (Euro)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Timezone</Label>
+              <Select
+                value={formData.timezone || 'Africa/Nairobi'}
+                onValueChange={(value) => updateField('timezone', value)}
+              >
+                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Africa/Nairobi">Africa/Nairobi (EAT)</SelectItem>
+                  <SelectItem value="UTC">UTC</SelectItem>
+                  <SelectItem value="America/New_York">America/New_York (EST)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Date Format</Label>
+              <Select
+                value={formData.dateFormat || 'YYYY-MM-DD'}
+                onValueChange={(value) => updateField('dateFormat', value)}
+              >
+                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Environment</Label>
+              <div className="flex items-center gap-3">
+                <Select
+                  value={formData.environment || 'production'}
+                  onValueChange={(value: 'production' | 'sandbox') => updateField('environment', value)}
+                >
+                  <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="production">Production</SelectItem>
+                    <SelectItem value="sandbox">Sandbox</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Badge
+                  variant="outline"
+                  className={
+                    formData.environment === 'production'
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                  }
+                >
+                  {formData.environment === 'production' ? 'Production' : 'Sandbox'}
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* SECTION 2: SMS PROVIDER SETTINGS */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <Radio className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">SMS Provider Settings</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Provider Name</Label>
+              <Input
+                value={formData.providerName || ''}
+                onChange={(e) => updateField('providerName', e.target.value)}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+                placeholder="HostPinnacle"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Provider API Key</Label>
+              <div className="relative">
+                <Input
+                  type={showApiKey ? 'text' : 'password'}
+                  value={formData.providerApiKey || ''}
+                  onChange={(e) => updateField('providerApiKey', e.target.value)}
+                  className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
+                  placeholder="Enter API key"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#020617]"
+                >
+                  {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Default Provider Cost per Part (KES)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={formData.defaultProviderCostPerPart || 0}
+                onChange={(e) => updateField('defaultProviderCostPerPart', parseFloat(e.target.value))}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Retry Policy (0-3)</Label>
+              <Input
+                type="number"
+                min="0"
+                max="3"
+                value={formData.retryPolicy || 0}
+                onChange={(e) => updateField('retryPolicy', parseInt(e.target.value))}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+                <div>
+                  <Label className="text-sm font-medium text-[#020617]">Delivery Report Webhook Status</Label>
+                  <p className="text-xs text-[#64748B] mt-1">Enable webhook notifications for delivery reports</p>
+                </div>
+                <Switch
+                  checked={formData.deliveryReportWebhookEnabled || false}
+                  onCheckedChange={(checked) => updateField('deliveryReportWebhookEnabled', checked)}
+                />
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* SECTION 3: PRICING & COST CONTROLS */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <DollarSign className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">Pricing & Cost Controls</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Global Default Price per Part (KES)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={formData.globalDefaultPricePerPart || 0}
+                onChange={(e) => updateField('globalDefaultPricePerPart', parseFloat(e.target.value))}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Global Provider Cost per Part (KES)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={formData.globalProviderCostPerPart || 0}
+                onChange={(e) => updateField('globalProviderCostPerPart', parseFloat(e.target.value))}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+              />
+            </div>
+
+            <div className="md:col-span-2 space-y-4">
+              <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+                <div>
+                  <Label className="text-sm font-medium text-[#020617]">Default Charge on Failure</Label>
+                  <p className="text-xs text-[#64748B] mt-1">Charge users for failed SMS by default</p>
+                </div>
+                <Switch
+                  checked={formData.defaultChargeOnFailure || false}
+                  onCheckedChange={(checked) => updateField('defaultChargeOnFailure', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+                <div>
+                  <Label className="text-sm font-medium text-[#020617]">Default Refund on Failure</Label>
+                  <p className="text-xs text-[#64748B] mt-1">Automatically refund failed SMS by default</p>
+                </div>
+                <Switch
+                  checked={formData.defaultRefundOnFailure !== false}
+                  onCheckedChange={(checked) => updateField('defaultRefundOnFailure', checked)}
+                />
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* SECTION 4: SECURITY & COMPLIANCE */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <Shield className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">Security & Compliance</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+              <div>
+                <Label className="text-sm font-medium text-[#020617]">Require Sender ID Approval</Label>
+                <p className="text-xs text-[#64748B] mt-1">All sender IDs must be approved before use</p>
+              </div>
+              <Switch
+                checked={formData.requireSenderIdApproval !== false}
+                onCheckedChange={(checked) => updateField('requireSenderIdApproval', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+              <div>
+                <Label className="text-sm font-medium text-[#020617]">Log All Admin Actions</Label>
+                <p className="text-xs text-[#64748B] mt-1">Enable comprehensive audit logging</p>
+              </div>
+              <Switch
+                checked={formData.logAllAdminActions !== false}
+                onCheckedChange={(checked) => updateField('logAllAdminActions', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+              <div>
+                <Label className="text-sm font-medium text-[#020617]">Lock Pricing Edits to Super Admin Only</Label>
+                <p className="text-xs text-[#64748B] mt-1">Only super admins can modify pricing rules</p>
+              </div>
+              <Switch
+                checked={formData.lockPricingEditsToSuperAdmin !== false}
+                onCheckedChange={(checked) => updateField('lockPricingEditsToSuperAdmin', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+              <div>
+                <Label className="text-sm font-medium text-[#020617]">Enable IP Logging</Label>
+                <p className="text-xs text-[#64748B] mt-1">Log IP addresses for all actions</p>
+              </div>
+              <Switch
+                checked={formData.enableIpLogging !== false}
+                onCheckedChange={(checked) => updateField('enableIpLogging', checked)}
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* SECTION 5: SYSTEM DEFAULTS */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <Database className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">System Defaults</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Default SMS Encoding</Label>
+              <Select
+                value={formData.defaultSmsEncoding || 'auto'}
+                onValueChange={(value: 'auto' | 'gsm7' | 'ucs2') => updateField('defaultSmsEncoding', value)}
+              >
+                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="auto">Auto</SelectItem>
+                  <SelectItem value="gsm7">GSM-7</SelectItem>
+                  <SelectItem value="ucs2">UCS-2</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Default Sender ID Behavior</Label>
+              <Select
+                value={formData.defaultSenderIdBehavior || 'require_approval'}
+                onValueChange={(value) => updateField('defaultSenderIdBehavior', value)}
+              >
+                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="require_approval">Require Approval</SelectItem>
+                  <SelectItem value="auto_approve">Auto Approve</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium text-[#020617] mb-2 block">Default Account Credit Limit (KES)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={formData.defaultAccountCreditLimit || 0}
+                onChange={(e) => updateField('defaultAccountCreditLimit', parseFloat(e.target.value))}
+                className="border-[#E5E7EB] bg-white text-[#020617]"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* SECTION 6: M-PESA CONFIGURATION */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-slate-100">
+              <Key className="w-5 h-5 text-[#64748B]" />
+            </div>
+            <h2 className="text-xl font-semibold text-[#020617]">M-Pesa Gateway Configuration</h2>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex items-center justify-between p-4 bg-[#F1F5F9] rounded-lg border border-[#E5E7EB]">
+              <div>
+                <Label className="text-sm font-medium text-[#020617]">Enable M-Pesa Gateway</Label>
+                <p className="text-xs text-[#64748B] mt-1">Enable M-Pesa STK Push and C2B payment processing</p>
+              </div>
+              <Switch
+                checked={formData.mpesaEnabled || false}
+                onCheckedChange={(checked) => updateField('mpesaEnabled', checked)}
+              />
+            </div>
+          </div>
+
+          {formData.mpesaEnabled && (
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Consumer Key</Label>
+                  <div className="relative">
+                    <Input
+                      type={showMpesaCredentials.consumerKey ? 'text' : 'password'}
+                      value={formData.mpesaConsumerKey || ''}
+                      onChange={(e) => updateField('mpesaConsumerKey', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
+                      placeholder="Enter Consumer Key"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMpesaCredentials({ ...showMpesaCredentials, consumerKey: !showMpesaCredentials.consumerKey })}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#020617]"
+                    >
+                      {showMpesaCredentials.consumerKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Consumer Secret</Label>
+                  <div className="relative">
+                    <Input
+                      type={showMpesaCredentials.consumerSecret ? 'text' : 'password'}
+                      value={formData.mpesaConsumerSecret || ''}
+                      onChange={(e) => updateField('mpesaConsumerSecret', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
+                      placeholder="Enter Consumer Secret"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMpesaCredentials({ ...showMpesaCredentials, consumerSecret: !showMpesaCredentials.consumerSecret })}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#020617]"
+                    >
+                      {showMpesaCredentials.consumerSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Passkey</Label>
+                  <div className="relative">
+                    <Input
+                      type={showMpesaCredentials.passkey ? 'text' : 'password'}
+                      value={formData.mpesaPasskey || ''}
+                      onChange={(e) => updateField('mpesaPasskey', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
+                      placeholder="Enter Passkey"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMpesaCredentials({ ...showMpesaCredentials, passkey: !showMpesaCredentials.passkey })}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#020617]"
+                    >
+                      {showMpesaCredentials.passkey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Shortcode (Paybill/Till Number)</Label>
+                  <Input
+                    value={formData.mpesaShortcode || ''}
+                    onChange={(e) => updateField('mpesaShortcode', e.target.value)}
+                    className="border-[#E5E7EB] bg-white text-[#020617]"
+                    placeholder="e.g., 174379"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Environment</Label>
+                  <Select
+                    value={formData.mpesaEnvironment || 'sandbox'}
+                    onValueChange={(value: 'sandbox' | 'production') => updateField('mpesaEnvironment', value)}
+                  >
+                    <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sandbox">Sandbox</SelectItem>
+                      <SelectItem value="production">Production</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-[#020617]">Callback URLs</h3>
+                <div className="grid md:grid-cols-1 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-[#020617] mb-2 block">STK Push Callback URL</Label>
+                    <Input
+                      value={formData.mpesaCallbackUrl || ''}
+                      onChange={(e) => updateField('mpesaCallbackUrl', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      placeholder="https://yourdomain.com/api/mpesa/stk-callback"
+                    />
+                    <p className="text-xs text-[#64748B] mt-1">URL where M-Pesa sends STK Push payment callbacks</p>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium text-[#020617] mb-2 block">C2B Validation URL</Label>
+                    <Input
+                      value={formData.mpesaValidationUrl || ''}
+                      onChange={(e) => updateField('mpesaValidationUrl', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      placeholder="https://yourdomain.com/api/mpesa/c2b-validation"
+                    />
+                    <p className="text-xs text-[#64748B] mt-1">URL where M-Pesa sends C2B validation requests</p>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium text-[#020617] mb-2 block">C2B Confirmation URL</Label>
+                    <Input
+                      value={formData.mpesaConfirmationUrl || ''}
+                      onChange={(e) => updateField('mpesaConfirmationUrl', e.target.value)}
+                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      placeholder="https://yourdomain.com/api/mpesa/c2b-confirmation"
+                    />
+                    <p className="text-xs text-[#64748B] mt-1">URL where M-Pesa sends C2B confirmation requests</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-900 mb-3">
+                    <strong>Note:</strong> After configuring M-Pesa settings, register the C2B URLs with M-Pesa.
+                  </p>
+                  <Button
+                    onClick={handleRegisterC2BUrls}
+                    disabled={registeringUrls || !formData.mpesaValidationUrl || !formData.mpesaConfirmationUrl}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {registeringUrls ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Registering...
+                      </>
+                    ) : (
+                      <>
+                        <Key className="w-4 h-4 mr-2" />
+                        Register C2B URLs
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {formData.mpesaEnvironment === 'sandbox' && (
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm font-medium text-amber-900 mb-3">Test C2B Payment (Sandbox Only)</p>
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-sm font-medium text-[#020617] mb-1 block">Phone Number</Label>
+                        <Input
+                          value={simulationData.phoneNumber}
+                          onChange={(e) => setSimulationData({ ...simulationData, phoneNumber: e.target.value })}
+                          placeholder="254712345678"
+                          className="border-[#E5E7EB] bg-white text-[#020617]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-[#020617] mb-1 block">Amount (KES)</Label>
+                        <Input
+                          type="number"
+                          value={simulationData.amount}
+                          onChange={(e) => setSimulationData({ ...simulationData, amount: e.target.value })}
+                          placeholder="100"
+                          className="border-[#E5E7EB] bg-white text-[#020617]"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-[#020617] mb-1 block">Bill Reference (Optional)</Label>
+                        <Input
+                          value={simulationData.billRefNumber}
+                          onChange={(e) => setSimulationData({ ...simulationData, billRefNumber: e.target.value })}
+                          placeholder="Account reference"
+                          className="border-[#E5E7EB] bg-white text-[#020617]"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleSimulateC2B}
+                        disabled={simulating || !simulationData.phoneNumber || !simulationData.amount}
+                        className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                      >
+                        {simulating ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                            Simulating...
+                          </>
+                        ) : (
+                          <>
+                            <Phone className="w-4 h-4 mr-2" />
+                            Simulate C2B Payment
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* SECTION 7: DANGER ZONE */}
+        <Card className="bg-white border-2 border-red-200 rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-lg bg-red-50">
+              <AlertTriangle className="w-5 h-5 text-red-600" />
+            </div>
+            <h2 className="text-xl font-semibold text-red-600">Danger Zone</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
+              <div>
+                <Label className="text-sm font-medium text-red-900">Rotate Provider API Keys</Label>
+                <p className="text-xs text-red-700 mt-1">Generate new API keys for the provider</p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setDangerAction('rotate_api_keys')}
+                className="border-red-300 text-red-700 hover:bg-red-100"
+              >
+                <Key className="w-4 h-4 mr-2" />
+                Rotate Keys
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
+              <div>
+                <Label className="text-sm font-medium text-red-900">Flush Webhook Logs</Label>
+                <p className="text-xs text-red-700 mt-1">Permanently delete all webhook log entries</p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setDangerAction('flush_webhook_logs')}
+                className="border-red-300 text-red-700 hover:bg-red-100"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Flush Logs
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
+              <div>
+                <Label className="text-sm font-medium text-red-900">Recalculate Balances</Label>
+                <p className="text-xs text-red-700 mt-1">Recalculate all account balances (dangerous)</p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setDangerAction('recalculate_balances')}
+                className="border-red-300 text-red-700 hover:bg-red-100"
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Recalculate
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
+              <div>
+                <Label className="text-sm font-medium text-red-900">Disable SMS Sending Globally</Label>
+                <p className="text-xs text-red-700 mt-1">Stop all SMS sending across the platform</p>
+              </div>
+              <Switch
+                checked={!formData.smsSendingEnabled}
+                onCheckedChange={(checked) => updateField('smsSendingEnabled', !checked)}
+                className="data-[state=checked]:bg-red-600"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Danger Action Confirmation Dialog */}
+        <AlertDialog open={!!dangerAction} onOpenChange={(open) => !open && setDangerAction(null)}>
+          <AlertDialogContent className="bg-white border-red-200">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-red-600">Confirm Dangerous Action</AlertDialogTitle>
+              <AlertDialogDescription>
+                {dangerAction === 'rotate_api_keys' && 'This will rotate the provider API keys. All active connections may be interrupted.'}
+                {dangerAction === 'flush_webhook_logs' && 'This will permanently delete all webhook logs. This action cannot be undone.'}
+                {dangerAction === 'recalculate_balances' && 'This will recalculate all account balances. This may take several minutes and could affect active transactions.'}
+                Are you absolutely sure you want to proceed?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => dangerAction && handleDangerAction(dangerAction)}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </div>
+  )
+}
+
