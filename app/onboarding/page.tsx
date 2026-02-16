@@ -182,7 +182,7 @@ function Step3() {
           <label className="block text-sm font-medium text-foreground mb-2">Sender ID Name</label>
           <input
             type="text"
-            placeholder="e.g., SIGNALHUB"
+            placeholder="e.g., TXTLINK"
             maxLength={11}
             className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
@@ -255,7 +255,7 @@ function Step4() {
   const reviewData = {
     company: 'Tech Solutions Ltd',
     regNumber: 'CR/123456/2024',
-    senderID: 'SIGNALHUB',
+    senderID: 'TXTLINK',
     useCase: 'Transactional',
     volume: '1M - 10M',
   }

@@ -9,27 +9,27 @@ import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
 export default function NodeJSSDKPage() {
-  const installExample = `npm install @signalhub/sdk`
+  const installExample = `npm install @txtlink/sdk`
 
-  const quickExample = `import { SignalHub } from '@signalhub/sdk';
+  const quickExample = `import { TXTLINK } from '@txtlink/sdk';
 
-const client = new SignalHub({
-  apiKey: process.env.SIGNALHUB_API_KEY,
+const client = new TXTLINK({
+  apiKey: process.env.TXTLINK_API_KEY,
 });
 
 // Send SMS
 const result = await client.sms.send({
   to: '+254712345678',
-  message: 'Hello from SignalHub!',
-  senderId: 'SIGNALHUB',
+  message: 'Hello from TXTLINK!',
+  senderId: 'TXTLINK',
 });
 
 console.log(result);`
 
-  const advancedExample = `import { SignalHub } from '@signalhub/sdk';
+  const advancedExample = `import { TXTLINK } from '@txtlink/sdk';
 
-const client = new SignalHub({
-  apiKey: process.env.SIGNALHUB_API_KEY,
+const client = new TXTLINK({
+  apiKey: process.env.TXTLINK_API_KEY,
   timeout: 30000, // 30 seconds
 });
 
@@ -39,12 +39,12 @@ const results = await client.sms.sendBulk({
     { to: '+254712345678', message: 'Hello 1' },
     { to: '+254712345679', message: 'Hello 2' },
   ],
-  senderId: 'SIGNALHUB',
+  senderId: 'TXTLINK',
 });
 
 // Handle webhooks
 app.post('/webhook', async (req, res) => {
-  const signature = req.headers['x-signalhub-signature'];
+  const signature = req.headers['x-txtlink-signature'];
   const isValid = client.webhooks.verify(req.body, signature);
   
   if (isValid) {
@@ -55,16 +55,16 @@ app.post('/webhook', async (req, res) => {
   res.status(200).send('OK');
 });`
 
-  const errorHandlingExample = `import { SignalHub, SignalHubError } from '@signalhub/sdk';
+  const errorHandlingExample = `import { TXTLINK, TXTLINKError } from '@txtlink/sdk';
 
 try {
   const result = await client.sms.send({
     to: '+254712345678',
     message: 'Hello',
-    senderId: 'SIGNALHUB',
+    senderId: 'TXTLINK',
   });
 } catch (error) {
-  if (error instanceof SignalHubError) {
+  if (error instanceof TXTLINKError) {
     console.error('API Error:', error.message);
     console.error('Status Code:', error.statusCode);
     console.error('Error Code:', error.code);
@@ -84,7 +84,7 @@ try {
             <div className="flex items-center gap-4">
               <span className="text-sm text-slate-500">v1.2.0</span>
               <Link
-                href="https://github.com/signalhub/node-sdk"
+                href="https://github.com/txtlink/node-sdk"
                 target="_blank"
                 className="flex items-center gap-2 text-sm text-teal-600 hover:text-teal-700"
               >
@@ -94,7 +94,7 @@ try {
             </div>
           </div>
           <p className="text-xl text-slate-600 leading-relaxed">
-            Official Node.js SDK for SignalHub. TypeScript support included.
+            Official Node.js SDK for TXTLINK. TypeScript support included.
           </p>
         </div>
 
@@ -131,7 +131,7 @@ try {
           <Callout type="info" title="TypeScript">
             All types are exported from the main package. Import types directly:
             <CodeBlock
-              code={`import { SignalHub, SMSResult, WebhookEvent } from '@signalhub/sdk';`}
+              code={`import { TXTLINK, SMSResult, WebhookEvent } from '@txtlink/sdk';`}
               language="typescript"
             />
           </Callout>
@@ -145,7 +145,7 @@ try {
             in production:
           </p>
           <CodeBlock
-            code={`npm install @signalhub/sdk@1.2.0`}
+            code={`npm install @txtlink/sdk@1.2.0`}
             language="bash"
           />
         </div>
@@ -155,7 +155,7 @@ try {
           <h3 className="font-semibold text-slate-900 mb-4">Resources</h3>
           <ul className="space-y-2">
             <li>
-              <Link href="https://github.com/signalhub/node-sdk" className="text-teal-600 hover:text-teal-700 text-sm">
+              <Link href="https://github.com/txtlink/node-sdk" className="text-teal-600 hover:text-teal-700 text-sm">
                 GitHub Repository
               </Link>
             </li>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { MarketingLayout } from '@/components/marketing-layout'
@@ -21,89 +22,347 @@ import {
   Building2,
   TrendingUp,
   Server,
+  Building,
+  Phone,
+  Flag,
+  Heart,
+  Truck,
+  Activity,
+  Send,
+  Check,
 } from 'lucide-react'
 import Link from 'next/link'
 
+// Icon mapping
+const iconMap: Record<string, any> = {
+  Rocket,
+  ShieldCheck,
+  Building2,
+}
+
 export default function Home() {
+  const [pricingData, setPricingData] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await fetch('/api/marketing-pricing')
+        if (response.ok) {
+          const result = await response.json()
+          setPricingData(result.pricing)
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error)
+      }
+    }
+    fetchPricing()
+  }, [])
+
   return (
     <MarketingLayout>
       {/* Hero Section */}
-      <section className="pt-20 pb-20 px-6 border-b border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="relative py-20 md:py-24 max-h-[80vh] overflow-hidden border-b border-gray-200 bg-gradient-to-b from-white via-emerald-50/40 to-white">
+        {/* Subtle Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Soft Radial Glow */}
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-200/20 rounded-full blur-3xl"></div>
+          {/* Floating Blur Shapes */}
+          <div className="absolute top-20 left-1/4 w-64 h-64 bg-teal-100/30 rounded-full blur-2xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-1/4 w-48 h-48 bg-green-100/30 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
             <div className="space-y-6">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
-                Enterprise SMS & Messaging Infrastructure
-              </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                Secure, compliant, and scalable SMS solutions designed for businesses and institutions. Sender IDs, bulk SMS, API integration, and carrier-grade reliability.
-              </p>
-              <div className="flex gap-4 pt-4 flex-wrap">
-                <Button className="bg-teal-600 text-white hover:bg-teal-700 px-8 py-6 text-base font-semibold">
-                  Get a Sender ID 
+              {/* Main Heading - Outcome-Driven */}
+              <div className="space-y-4">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
+                  Reliable SMS Infrastructure Built for Scale
+                </h1>
+                <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
+                  Send transactional and bulk SMS with 99.9% uptime, verified Sender IDs, and real-time delivery tracking.
+                </p>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-4 pt-2">
+                <Button 
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-6 text-base font-semibold shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105"
+                  size="lg"
+                >
+                  Get Started Free
                   <ArrowRight className="ml-2" size={18} />
                 </Button>
-                <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-6 text-base font-semibold">
-                  View Pricing
+                <Button 
+                  variant="outline" 
+                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 px-8 py-6 text-base font-semibold transition-all duration-300"
+                  size="lg"
+                >
+                  See Pricing
                 </Button>
+              </div>
+
+              {/* Trust Layer */}
+              <div className="flex flex-wrap gap-6 pt-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>No setup fees</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>Fast Sender ID approval</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>API ready in minutes</span>
+                </div>
               </div>
             </div>
 
-            {/* Abstract Infrastructure Diagram */}
-            <div className="relative h-96 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-center">
-              <div className="absolute inset-0 opacity-20">
-                <svg
-                  viewBox="0 0 400 400"
-                  className="w-full h-full text-teal-600"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                >
-                  <circle cx="200" cy="200" r="150" fill="none" />
-                  <circle cx="200" cy="200" r="100" fill="none" />
-                  <circle cx="200" cy="200" r="50" fill="none" />
-                  <circle cx="200" cy="80" r="20" fill="currentColor" />
-                  <circle cx="280" cy="200" r="20" fill="currentColor" />
-                  <circle cx="200" cy="320" r="20" fill="currentColor" />
-                  <circle cx="120" cy="200" r="20" fill="currentColor" />
-                  <line x1="200" y1="100" x2="200" y2="80" />
-                  <line x1="260" y1="260" x2="280" y2="200" />
-                  <line x1="200" y1="300" x2="200" y2="320" />
-                  <line x1="140" y1="140" x2="120" y2="200" />
-                </svg>
+            {/* Right Visual - Modern Dashboard Mockup */}
+            <div className="relative max-w-xl mx-auto lg:mx-0">
+              {/* Dashboard Container */}
+              <div className="relative bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden">
+                {/* Dashboard Header */}
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <div className="text-xs font-medium text-gray-600">TXTLINK Dashboard</div>
+                  <div className="w-16"></div>
+                </div>
+
+                {/* Dashboard Content */}
+                <div className="p-6 space-y-4">
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Messages Sent Card */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg p-4 border border-emerald-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <Send className="w-4 h-4 text-emerald-600" />
+                        <Activity className="w-4 h-4 text-emerald-600 animate-pulse" />
+                      </div>
+                      <div className="text-2xl font-bold text-gray-900">2.4M</div>
+                      <div className="text-xs text-gray-600">Messages sent today</div>
+                      <div className="mt-2 flex items-center gap-1 text-xs text-emerald-600">
+                        <TrendingUp className="w-3 h-3" />
+                        <span>+12% from yesterday</span>
+                      </div>
+                    </div>
+
+                    {/* Delivery Rate Card */}
+                    <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-100">
+                      <div className="flex items-center justify-between mb-2">
+                        <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                        <BarChart3 className="w-4 h-4 text-blue-600" />
+                      </div>
+                      <div className="text-2xl font-bold text-gray-900">99.2%</div>
+                      <div className="text-xs text-gray-600">Delivery rate</div>
+                      <div className="mt-2 flex items-center gap-1 text-xs text-blue-600">
+                        <CheckCircle2 className="w-3 h-3" />
+                        <span>All systems operational</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* API Status Card */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Code className="w-4 h-4 text-gray-600" />
+                        <span className="text-sm font-semibold text-gray-900">API Status</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span className="text-xs text-green-600 font-medium">Live</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-600">Requests/min</span>
+                        <span className="font-semibold text-gray-900">1,247</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-600">Avg response</span>
+                        <span className="font-semibold text-gray-900">45ms</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sender ID Badge */}
+                  <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg p-4 text-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-5 h-5" />
+                        <div>
+                          <div className="text-sm font-semibold">Sender ID Approved</div>
+                          <div className="text-xs text-emerald-100">TXTLINK • Active</div>
+                        </div>
+                      </div>
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="relative z-10 text-center">
-                <Radio className="mx-auto mb-4 text-teal-600" size={48} />
-                <p className="text-sm text-gray-600 font-medium">
-                  Global SMS Network
-                </p>
+
+              {/* Floating UI Cards */}
+              <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                    <MessageSquare className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-gray-900">98.7%</div>
+                    <div className="text-[10px] text-gray-500">Success rate</div>
+                  </div>
+                </div>
               </div>
+
+              <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <Zap className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-gray-900">Real-time</div>
+                    <div className="text-[10px] text-gray-500">Delivery tracking</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Proof - Slightly Visible */}
+        <div className="absolute bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-white via-white/90 to-transparent">
+          <div className="max-w-7xl mx-auto px-6">
+            <p className="text-sm text-gray-500 text-center mb-3">
+              Trusted by 500+ businesses across fintech, healthcare & e-commerce
+            </p>
+            {/* Logo Placeholders - Grayscale */}
+            <div className="flex items-center justify-center gap-8 opacity-60">
+              <div className="w-20 h-8 bg-gray-300 rounded"></div>
+              <div className="w-20 h-8 bg-gray-300 rounded"></div>
+              <div className="w-20 h-8 bg-gray-300 rounded"></div>
+              <div className="w-20 h-8 bg-gray-300 rounded"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Trusted By Section */}
-      <section className="py-16 px-6 border-b border-gray-200 bg-gray-50">
+      <section className="py-20 px-6 border-b border-gray-200 bg-gradient-to-b from-white via-gray-50/50 to-white">
         <div className="max-w-7xl mx-auto">
-          <h3 className="text-center text-sm font-semibold text-gray-500 mb-12 uppercase tracking-widest">
-            Trusted by leading organizations worldwide
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+          <div className="text-center mb-16">
+            <p className="text-sm font-semibold text-teal-600 mb-3 uppercase tracking-wider">
+              Trusted by Industry Leaders
+            </p>
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Trusted by leading organizations worldwide
+            </h3>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Powering mission-critical communications for enterprises across banking, healthcare, government, and more
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {[
-              { name: 'Finance Bank', type: 'Banking' },
-              { name: 'Global Telecom', type: 'Telecom' },
-              { name: 'State Services', type: 'Government' },
-              { name: 'Care Hospitals', type: 'Healthcare' },
-              { name: 'Swift Logistics', type: 'Logistics' },
-            ].map((org) => (
-              <div key={org.name} className="text-center">
-                <div className="h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center mb-2 text-teal-600 font-bold text-xl shadow-sm">
-                  {org.name.charAt(0)}
-                </div>
-                <p className="text-sm font-semibold text-gray-900">{org.name}</p>
-                <p className="text-xs text-gray-500">{org.type}</p>
+              { 
+                name: 'Finance Bank', 
+                type: 'Banking',
+                icon: Building,
+                gradient: 'from-blue-500 to-blue-600',
+                bgGradient: 'from-blue-50 to-blue-100/50',
+              },
+              { 
+                name: 'Global Telecom', 
+                type: 'Telecom',
+                icon: Phone,
+                gradient: 'from-purple-500 to-purple-600',
+                bgGradient: 'from-purple-50 to-purple-100/50',
+              },
+              { 
+                name: 'State Services', 
+                type: 'Government',
+                icon: Flag,
+                gradient: 'from-slate-500 to-slate-600',
+                bgGradient: 'from-slate-50 to-slate-100/50',
+              },
+              { 
+                name: 'Care Hospitals', 
+                type: 'Healthcare',
+                icon: Heart,
+                gradient: 'from-emerald-500 to-emerald-600',
+                bgGradient: 'from-emerald-50 to-emerald-100/50',
+              },
+              { 
+                name: 'Swift Logistics', 
+                type: 'Logistics',
+                icon: Truck,
+                gradient: 'from-orange-500 to-orange-600',
+                bgGradient: 'from-orange-50 to-orange-100/50',
+              },
+            ].map((org) => {
+              const IconComponent = org.icon
+              return (
+                <Card 
+                  key={org.name} 
+                  className="group relative overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white"
+                >
+                  {/* Background gradient on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${org.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  
+                  <div className="relative p-6 text-center">
+                    {/* Logo/Avatar */}
+                    <div className="mb-4 flex justify-center">
+                      <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br ${org.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                        <IconComponent className="w-8 h-8 text-white" strokeWidth={2} />
+                        {/* Shine effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                    </div>
+                    
+                    {/* Company Name */}
+                    <h4 className="text-base font-bold text-gray-900 mb-1 group-hover:text-gray-900 transition-colors">
+                      {org.name}
+                    </h4>
+                    
+                    {/* Industry Type */}
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {org.type}
+                    </p>
+                    
+                    {/* Decorative element */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                </Card>
+              )
+            })}
+          </div>
+          
+          {/* Stats Row */}
+          <div className="mt-16 pt-12 border-t border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-teal-600 mb-2">500+</div>
+                <div className="text-sm text-gray-600 font-medium">Enterprise Clients</div>
               </div>
-            ))}
+              <div>
+                <div className="text-3xl font-bold text-teal-600 mb-2">50M+</div>
+                <div className="text-sm text-gray-600 font-medium">Messages/Month</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-teal-600 mb-2">99.9%</div>
+                <div className="text-sm text-gray-600 font-medium">Uptime SLA</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-teal-600 mb-2">24/7</div>
+                <div className="text-sm text-gray-600 font-medium">Support</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -178,7 +437,7 @@ export default function Home() {
       <section id="why" className="py-20 px-6 border-b border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose SignalHub</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose TXTLINK</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Enterprise-grade infrastructure built for reliability and compliance
             </p>
@@ -269,9 +528,9 @@ export default function Home() {
             {/* Code Snippet */}
             <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 font-mono text-sm overflow-x-auto">
               <pre className="text-gray-100">
-{`// Send SMS with SignalHub API
+{`// Send SMS with TXTLINK API
 const response = await fetch(
-  'https://api.signalhub.io/sms/send',
+  'https://api.txtlink.io/sms/send',
   {
     method: 'POST',
     headers: {
@@ -281,7 +540,7 @@ const response = await fetch(
     body: JSON.stringify({
       to: '+1234567890',
       message: 'Your OTP is: 123456',
-      senderId: 'SIGNALHUB',
+      senderId: 'TXTLINK',
       type: 'transactional'
     })
   }
@@ -299,22 +558,23 @@ console.log(result.messageId);`}
       <section id="pricing" className="py-20 px-6 border-b border-gray-200 bg-[#F9FAFB]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Transparent Pricing</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">{pricingData?.pageTitle || 'Transparent Pricing'}</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Scale your messaging without hidden fees or surprise charges
+              {pricingData?.pageSubtitle || 'Scale your messaging without hidden fees or surprise charges'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
             {(() => {
-              const plans = [
+              // Default plans (fallback)
+              const defaultPlans = [
               {
                 name: 'Starter',
                   price: 'KSh 2.50',
                   priceDecimal: '',
                 unit: 'per SMS',
                 description: 'Perfect for growing businesses',
-                  icon: Rocket,
+                  icon: 'Rocket',
                   accentColor: 'teal',
                 features: [
                     { text: 'Up to 10,000 SMS/month', category: 'Sending', highlight: false },
@@ -333,7 +593,7 @@ console.log(result.messageId);`}
                   priceDecimal: '',
                 unit: 'per SMS',
                 description: 'For established enterprises',
-                  icon: ShieldCheck,
+                  icon: 'ShieldCheck',
                   accentColor: 'indigo',
                 features: [
                     { text: 'Unlimited SMS', category: 'Sending', highlight: true },
@@ -354,7 +614,7 @@ console.log(result.messageId);`}
                   priceDecimal: '',
                 unit: 'pricing',
                 description: 'For large-scale operations',
-                  icon: Building2,
+                  icon: 'Building2',
                   accentColor: 'slate',
                 features: [
                     { text: 'Unlimited everything', category: 'Sending', highlight: true },
@@ -369,6 +629,8 @@ console.log(result.messageId);`}
                 highlighted: false,
               },
               ]
+              
+              const plans = pricingData?.tiers || defaultPlans
 
               const getAccentGradient = (accentColor: string) => {
                 switch (accentColor) {
@@ -439,8 +701,8 @@ console.log(result.messageId);`}
                 return groups
               }
 
-              return plans.map((plan) => {
-                const IconComponent = plan.icon
+              return plans.map((plan: any) => {
+                const IconComponent = iconMap[plan.icon] || Rocket
                 const featureGroups = groupedFeatures(plan.features)
                 const isHighlighted = plan.highlighted
 
@@ -645,7 +907,7 @@ console.log(result.messageId);`}
             Start Sending SMS at Scale
           </h2>
           <p className="text-xl text-gray-600">
-            Join hundreds of enterprises using SignalHub for reliable, compliant messaging
+            Join hundreds of enterprises using TXTLINK for reliable, compliant messaging
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button className="bg-teal-600 text-white hover:bg-teal-700 px-10 py-6 text-base font-semibold">

@@ -71,7 +71,7 @@ export function AdminLayout({ children, activeSection }: AdminLayoutProps) {
       >
         {/* Logo */}
         <div className="p-6 flex items-center justify-between border-b border-primary-foreground/20">
-          {sidebarOpen && <span className="font-bold text-xl">SignalHub Admin</span>}
+          {sidebarOpen && <span className="font-bold text-xl">TXTLINK Admin</span>}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-1 hover:bg-primary-foreground/10 rounded"

@@ -14,7 +14,7 @@ export default function QuickStartPage() {
   const steps = [
     {
       title: 'Create account',
-      description: 'Sign up for a free SignalHub account. No credit card required.',
+      description: 'Sign up for a free TXTLINK account. No credit card required.',
       time: '2 min',
     },
     {
@@ -24,7 +24,7 @@ export default function QuickStartPage() {
     },
     {
       title: 'Install SDK',
-      description: 'Install the SignalHub SDK for your preferred language.',
+      description: 'Install the TXTLINK SDK for your preferred language.',
       time: '1 min',
     },
     {
@@ -39,31 +39,31 @@ export default function QuickStartPage() {
     },
   ]
 
-  const nodeExample = `import { SignalHub } from '@signalhub/sdk';
+  const nodeExample = `import { TXTLINK } from '@txtlink/sdk';
 
-const client = new SignalHub({
-  apiKey: process.env.SIGNALHUB_API_KEY,
+const client = new TXTLINK({
+  apiKey: process.env.TXTLINK_API_KEY,
 });
 
 // Send SMS
 const result = await client.sms.send({
   to: '+254712345678',
-  message: 'Hello from SignalHub!',
-  senderId: 'SIGNALHUB',
+  message: 'Hello from TXTLINK!',
+  senderId: 'TXTLINK',
 });
 
 console.log('Message ID:', result.messageId);
 console.log('Status:', result.status);`
 
-  const pythonExample = `from signalhub import SignalHub
+  const pythonExample = `from txtlink import TXTLINK
 
-client = SignalHub(api_key=os.getenv('SIGNALHUB_API_KEY'))
+client = TXTLINK(api_key=os.getenv('TXTLINK_API_KEY'))
 
 # Send SMS
 result = client.sms.send(
     to='+254712345678',
-    message='Hello from SignalHub!',
-    sender_id='SIGNALHUB'
+    message='Hello from TXTLINK!',
+    sender_id='TXTLINK'
 )
 
 print(f"Message ID: {result.message_id}")
@@ -72,17 +72,17 @@ print(f"Status: {result.status}")`
   const phpExample = `<?php
 require 'vendor/autoload.php';
 
-use SignalHub\\SignalHub;
+use TXTLINK\\TXTLINK;
 
-$client = new SignalHub([
-    'api_key' => getenv('SIGNALHUB_API_KEY')
+$client = new TXTLINK([
+    'api_key' => getenv('TXTLINK_API_KEY')
 ]);
 
 // Send SMS
 $result = $client->sms->send([
     'to' => '+254712345678',
-    'message' => 'Hello from SignalHub!',
-    'sender_id' => 'SIGNALHUB'
+    'message' => 'Hello from TXTLINK!',
+    'sender_id' => 'TXTLINK'
 ]);
 
 echo "Message ID: " . $result->message_id . "\\n";
@@ -92,7 +92,7 @@ echo "Status: " . $result->status . "\\n";`
   "messageId": "msg_abc123xyz",
   "status": "QUEUED",
   "to": "+254712345678",
-  "senderId": "SIGNALHUB",
+  "senderId": "TXTLINK",
   "createdAt": "2026-02-08T12:00:00Z"
 }`
 
@@ -105,7 +105,7 @@ echo "Status: " . $result->status . "\\n";`
             Quick Start
           </h1>
           <p className="text-xl text-slate-600 leading-relaxed">
-            Get up and running with SignalHub in 5 minutes. Follow these steps 
+            Get up and running with TXTLINK in 5 minutes. Follow these steps 
             to send your first SMS.
           </p>
         </div>
@@ -124,7 +124,7 @@ echo "Status: " . $result->status . "\\n";`
             <h2 className="text-2xl font-bold text-slate-900">Create account</h2>
           </div>
           <p className="text-slate-600 mb-6">
-            Sign up for a free SignalHub account. You'll get access to test API keys 
+            Sign up for a free TXTLINK account. You'll get access to test API keys 
             and can send up to 100 SMS messages for free during development.
           </p>
           <div className="flex gap-4">
@@ -169,24 +169,24 @@ echo "Status: " . $result->status . "\\n";`
             <h2 className="text-2xl font-bold text-slate-900">Install SDK</h2>
           </div>
           <p className="text-slate-600 mb-6">
-            Install the SignalHub SDK for your preferred programming language:
+            Install the TXTLINK SDK for your preferred programming language:
           </p>
           <Tabs defaultTab="node">
             <Tab id="node" label="Node.js">
               <CodeBlock
-                code="npm install @signalhub/sdk"
+                code="npm install @txtlink/sdk"
                 language="bash"
               />
             </Tab>
             <Tab id="python" label="Python">
               <CodeBlock
-                code="pip install signalhub-sdk"
+                code="pip install txtlink-sdk"
                 language="bash"
               />
             </Tab>
             <Tab id="php" label="PHP">
               <CodeBlock
-                code="composer require signalhub/sdk"
+                code="composer require txtlink/sdk"
                 language="bash"
               />
             </Tab>

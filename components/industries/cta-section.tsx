@@ -15,7 +15,7 @@ export function CTASection() {
               Ready to transform your messaging?
             </h3>
             <p className="mt-3 max-w-xl text-teal-100">
-              Let's discuss how SignalHub can meet your industry-specific messaging needs with 
+              Let's discuss how TXTLINK can meet your industry-specific messaging needs with 
               enterprise-grade infrastructure and compliance.
             </p>
             <div className="mt-4 flex items-center gap-6 text-sm text-teal-100">

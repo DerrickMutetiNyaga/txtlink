@@ -55,7 +55,7 @@ export default function AboutPage() {
   ]
 
   const milestones = [
-    { year: '2020', title: 'Founded', description: 'SignalHub was founded with a mission to democratize enterprise SMS infrastructure', tag: 'Growth' },
+    { year: '2020', title: 'Founded', description: 'TXTLINK was founded with a mission to democratize enterprise SMS infrastructure', tag: 'Growth' },
     { year: '2021', title: 'First 100 Clients', description: 'Reached our first 100 enterprise clients across Africa', tag: 'Scale' },
     { year: '2022', title: 'ISO 27001 Certified', description: 'Achieved ISO 27001 certification for information security', tag: 'Compliance' },
     { year: '2023', title: '50M Messages/Month', description: 'Processed over 50 million messages per month', tag: 'Scale' },
@@ -78,13 +78,13 @@ export default function AboutPage() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 bg-teal-50 text-[#0F766E] px-4 py-2 rounded-full text-sm font-medium border border-teal-200/50">
                 <Users className="w-4 h-4" />
-                <span>About SignalHub</span>
+                <span>About TXTLINK</span>
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-[#0B1220] leading-tight tracking-tight">
                 Building the Future of Enterprise Messaging
               </h1>
               <p className="text-xl text-[#334155] leading-relaxed">
-                SignalHub is a leading provider of enterprise SMS infrastructure, helping businesses 
+                TXTLINK is a leading provider of enterprise SMS infrastructure, helping businesses 
                 across Africa and beyond deliver reliable, secure, and scalable messaging solutions.
               </p>
 

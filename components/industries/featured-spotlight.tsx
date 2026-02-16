@@ -105,7 +105,7 @@ export function FeaturedSpotlight() {
     <Card className="p-8 bg-white border border-slate-200/60 rounded-2xl shadow-sm">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Featured Industry Spotlight</h2>
-        <p className="text-slate-600">See how SignalHub powers industry-specific messaging workflows</p>
+        <p className="text-slate-600">See how TXTLINK powers industry-specific messaging workflows</p>
       </div>
 
       {/* Tabs */}

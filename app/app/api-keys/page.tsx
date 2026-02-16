@@ -295,7 +295,7 @@ export default function APIKeysPage() {
               ) : (
                 <>
                   <p className="text-gray-600 mb-8 leading-relaxed">
-                    Generate your first API key to start integrating with SignalHub. Use API keys to authenticate your requests and send SMS programmatically.
+                    Generate your first API key to start integrating with TXTLINK. Use API keys to authenticate your requests and send SMS programmatically.
                   </p>
                   <Button
                     onClick={() => setShowModal(true)}

@@ -62,7 +62,7 @@ export default function SupportPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-semibold text-[#1F2937] mb-2">Support Center</h1>
-          <p className="text-slate-600">We're here to help you succeed with SignalHub</p>
+          <p className="text-slate-600">We're here to help you succeed with TXTLINK</p>
         </div>
 
         {/* Support Options */}

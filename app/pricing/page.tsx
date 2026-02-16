@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { MarketingLayout } from '@/components/marketing-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,9 +20,36 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-export default function PricingPage() {
+// Icon mapping
+const iconMap: Record<string, any> = {
+  Rocket,
+  ShieldCheck,
+  Building2,
+}
 
-  const tiers = [
+export default function PricingPage() {
+  const [pricingData, setPricingData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await fetch('/api/marketing-pricing')
+        if (response.ok) {
+          const result = await response.json()
+          setPricingData(result.pricing)
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPricing()
+  }, [])
+
+  // Default tiers (fallback)
+  const defaultTiers = [
     {
       name: 'Starter',
       price: 'KSh 2.50',
@@ -89,12 +117,30 @@ export default function PricingPage() {
     },
   ]
 
-  const discounts = [
+  const defaultDiscounts = [
     { volume: '1M - 10M', discount: '10%', price: 'KSh 2.25' },
     { volume: '10M - 50M', discount: '15%', price: 'KSh 2.15' },
     { volume: '50M - 100M', discount: '20%', price: 'KSh 2.00' },
     { volume: '100M+', discount: 'Custom', price: 'Contact' },
   ]
+
+  const tiers = pricingData?.tiers || defaultTiers
+  const discounts = pricingData?.volumeDiscounts || defaultDiscounts
+  const pageTitle = pricingData?.pageTitle || 'Simple, Transparent Pricing'
+  const pageSubtitle = pricingData?.pageSubtitle || 'Scale your messaging without hidden fees. Only pay for what you send.'
+
+  if (loading) {
+    return (
+      <MarketingLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading pricing...</p>
+          </div>
+        </div>
+      </MarketingLayout>
+    )
+  }
 
   const getAccentGradient = (accentColor: string) => {
     switch (accentColor) {
@@ -170,16 +216,16 @@ export default function PricingPage() {
       <div className="px-6 py-12 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">{pageTitle}</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Scale your messaging without hidden fees. Only pay for what you send.
+            {pageSubtitle}
           </p>
         </div>
 
         {/* Pricing Tiers */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {tiers.map((tier) => {
-            const IconComponent = tier.icon
+          {tiers.map((tier: any) => {
+            const IconComponent = iconMap[tier.icon] || Rocket
             const featureGroups = groupedFeatures(tier.features)
             const isHighlighted = tier.highlighted
 
@@ -364,7 +410,7 @@ export default function PricingPage() {
                 </tr>
               </thead>
               <tbody>
-                {discounts.map((row, idx) => (
+                {discounts.map((row: any, idx: number) => (
                   <tr
                     key={idx}
                     className="border-b border-gray-100 hover:bg-teal-50/50 transition-colors last:border-0"
@@ -389,7 +435,7 @@ export default function PricingPage() {
                   <HelpCircle className="w-4 h-4 text-teal-600" />
                   Is there a setup fee?
                 </h3>
-                <p className="text-sm text-gray-600">No. SignalHub has zero setup fees, no monthly minimums, and no cancellation fees.</p>
+                <p className="text-sm text-gray-600">No. TXTLINK has zero setup fees, no monthly minimums, and no cancellation fees.</p>
               </div>
               <div className="border-l-4 border-teal-500 pl-4">
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">

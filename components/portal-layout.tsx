@@ -160,7 +160,7 @@ export function PortalLayout({ children, activeSection }: PortalLayoutProps) {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-base text-white">SignalHub</span>
+                    <span className="font-bold text-base text-white">TXTLINK</span>
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#0F766E]/20 text-[#0F766E] border border-[#0F766E]/30">
                       Enterprise
                     </span>
@@ -183,7 +183,7 @@ export function PortalLayout({ children, activeSection }: PortalLayoutProps) {
           {/* Workspace Switcher */}
           {sidebarOpen && (
             <button className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 transition-all group">
-              <span className="text-xs font-medium text-slate-300">SignalHub Workspace</span>
+              <span className="text-xs font-medium text-slate-300">TXTLINK Workspace</span>
               <ChevronDown size={14} className="text-slate-400 group-hover:text-slate-300" />
             </button>
           )}

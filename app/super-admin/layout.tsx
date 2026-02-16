@@ -308,7 +308,7 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
                   </div>
                 </div>
                 <Separator />
-                <p className="text-xs text-slate-500 text-center">© SignalHub</p>
+                <p className="text-xs text-slate-500 text-center">© TXTLINK</p>
               </div>
             )}
           </div>

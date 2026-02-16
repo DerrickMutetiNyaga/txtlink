@@ -323,11 +323,11 @@ export default function IndustriesPage() {
           </div>
         </section>
 
-        {/* Why SignalHub Section */}
+        {/* Why TXTLINK Section */}
         <section className="px-6 py-16 bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">Why SignalHub</h2>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Why TXTLINK</h2>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 Enterprise-grade infrastructure built for reliability, compliance, and scale
               </p>

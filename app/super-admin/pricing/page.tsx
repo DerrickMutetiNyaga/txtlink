@@ -44,6 +44,8 @@ import {
   Calendar,
   ChevronDown,
   CheckCircle2,
+  Store,
+  Trash2,
 } from 'lucide-react'
 import {
   Select,
@@ -83,6 +85,36 @@ interface Account {
   } | null
 }
 
+interface MarketingPricingTier {
+  name: string
+  price: string
+  priceDecimal?: string
+  unit: string
+  description: string
+  icon: string
+  accentColor: 'teal' | 'indigo' | 'slate'
+  features: Array<{
+    text: string
+    category: string
+    highlight: boolean
+  }>
+  cta: string
+  ctaSecondary: string
+  highlighted: boolean
+  highlightReason?: string
+}
+
+interface MarketingPricing {
+  pageTitle: string
+  pageSubtitle: string
+  tiers: MarketingPricingTier[]
+  volumeDiscounts: Array<{
+    volume: string
+    discount: string
+    price: string
+  }>
+}
+
 export default function SuperAdminPricing() {
   const [rules, setRules] = useState<PricingRule[]>([])
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -92,6 +124,11 @@ export default function SuperAdminPricing() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterOverride, setFilterOverride] = useState<'all' | 'has_override' | 'using_global'>('all')
   const [dateRange, setDateRange] = useState('last_7_days')
+  
+  // Marketing pricing state
+  const [marketingPricing, setMarketingPricing] = useState<MarketingPricing | null>(null)
+  const [editingMarketingPricing, setEditingMarketingPricing] = useState<MarketingPricing | null>(null)
+  const [showMarketingEditor, setShowMarketingEditor] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -138,10 +175,48 @@ export default function SuperAdminPricing() {
         const accountsResult = await accountsResponse.json()
         setAccounts(accountsResult.accounts || [])
       }
+
+      // Fetch marketing pricing
+      const marketingResponse = await fetch('/api/marketing-pricing', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (marketingResponse.ok) {
+        const marketingResult = await marketingResponse.json()
+        setMarketingPricing(marketingResult.pricing)
+      }
     } catch (error) {
       console.error('Error fetching data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleSaveMarketingPricing = async () => {
+    if (!editingMarketingPricing) return
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch('/api/marketing-pricing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(editingMarketingPricing),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        setMarketingPricing(result.pricing)
+        setShowMarketingEditor(false)
+        setEditingMarketingPricing(null)
+        alert('Marketing pricing saved successfully')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to save marketing pricing')
+      }
+    } catch (error) {
+      alert('Failed to save marketing pricing')
     }
   }
 
@@ -813,6 +888,473 @@ export default function SuperAdminPricing() {
             </div>
           )}
         </Card>
+
+        {/* Marketing Pricing Management Section */}
+        <Card className="bg-white border-[#E5E7EB] rounded-xl shadow-sm border-l-4 border-l-teal-500 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <Store className="w-5 h-5 text-teal-600" />
+              <h2 className="text-xl font-semibold text-[#020617]">Marketing Pricing (Public Pages)</h2>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  setEditingMarketingPricing(marketingPricing || {
+                    pageTitle: 'Simple, Transparent Pricing',
+                    pageSubtitle: 'Scale your messaging without hidden fees. Only pay for what you send.',
+                    tiers: [],
+                    volumeDiscounts: [],
+                  })
+                  setShowMarketingEditor(true)
+                }}
+                className="bg-teal-600 hover:bg-teal-700 text-white font-medium"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Marketing Pricing
+              </Button>
+            </div>
+          </div>
+
+          {marketingPricing ? (
+            <div className="space-y-4">
+              <div className="bg-[#F8FAFC] rounded-lg p-4 border border-[#E5E7EB]">
+                <p className="text-sm font-medium text-[#020617] mb-2">Page Title</p>
+                <p className="text-sm text-[#64748B]">{marketingPricing.pageTitle}</p>
+              </div>
+              <div className="bg-[#F8FAFC] rounded-lg p-4 border border-[#E5E7EB]">
+                <p className="text-sm font-medium text-[#020617] mb-2">Page Subtitle</p>
+                <p className="text-sm text-[#64748B]">{marketingPricing.pageSubtitle}</p>
+              </div>
+              <div className="bg-[#F8FAFC] rounded-lg p-4 border border-[#E5E7EB]">
+                <p className="text-sm font-medium text-[#020617] mb-3">Pricing Tiers ({marketingPricing.tiers.length})</p>
+                <div className="space-y-2">
+                  {marketingPricing.tiers.map((tier, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-sm">
+                      <span className="text-[#64748B]">{tier.name}</span>
+                      <span className="font-medium text-[#020617]">{tier.price} {tier.unit}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-[#F8FAFC] rounded-lg p-4 border border-[#E5E7EB]">
+                <p className="text-sm font-medium text-[#020617] mb-3">Volume Discounts ({marketingPricing.volumeDiscounts.length})</p>
+                <div className="space-y-2">
+                  {marketingPricing.volumeDiscounts.map((discount, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-sm">
+                      <span className="text-[#64748B]">{discount.volume}</span>
+                      <span className="font-medium text-[#020617]">{discount.discount} - {discount.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-[#64748B]">No marketing pricing configured. Click "Edit Marketing Pricing" to set it up.</p>
+          )}
+        </Card>
+
+        {/* Edit Marketing Pricing Modal */}
+        {showMarketingEditor && editingMarketingPricing && (
+          <Dialog open={showMarketingEditor} onOpenChange={setShowMarketingEditor}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-[#E5E7EB] rounded-xl shadow-xl">
+              <DialogHeader className="border-l-4 border-l-teal-500 pl-6">
+                <DialogTitle className="text-xl font-bold text-[#020617]">
+                  Edit Marketing Pricing
+                </DialogTitle>
+                <DialogDescription className="text-[#64748B] mt-1">
+                  Configure the pricing information displayed on public pricing pages
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6 mt-6">
+                {/* Page Settings */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-[#020617]">Page Settings</h3>
+                  <div>
+                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Page Title</Label>
+                    <Input
+                      value={editingMarketingPricing.pageTitle}
+                      onChange={(e) => setEditingMarketingPricing({ ...editingMarketingPricing, pageTitle: e.target.value })}
+                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Page Subtitle</Label>
+                    <Input
+                      value={editingMarketingPricing.pageSubtitle}
+                      onChange={(e) => setEditingMarketingPricing({ ...editingMarketingPricing, pageSubtitle: e.target.value })}
+                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                    />
+                  </div>
+                </div>
+
+                <Separator className="bg-[#E5E7EB]" />
+
+                {/* Pricing Tiers */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-[#020617]">Pricing Tiers</h3>
+                    <Button
+                      onClick={() => {
+                        setEditingMarketingPricing({
+                          ...editingMarketingPricing,
+                          tiers: [
+                            ...editingMarketingPricing.tiers,
+                            {
+                              name: 'New Tier',
+                              price: 'KSh 0.00',
+                              priceDecimal: '',
+                              unit: 'per SMS',
+                              description: '',
+                              icon: 'Rocket',
+                              accentColor: 'teal',
+                              features: [],
+                              cta: 'Get Started',
+                              ctaSecondary: 'Learn more',
+                              highlighted: false,
+                            },
+                          ],
+                        })
+                      }}
+                      size="sm"
+                      className="bg-teal-600 hover:bg-teal-700 text-white"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Tier
+                    </Button>
+                  </div>
+                  <div className="space-y-4">
+                    {editingMarketingPricing.tiers.map((tier, tierIdx) => (
+                      <Card key={tierIdx} className="p-4 border-[#E5E7EB]">
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-medium text-[#020617]">Tier {tierIdx + 1}</h4>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                const newTiers = editingMarketingPricing.tiers.filter((_, i) => i !== tierIdx)
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Name</Label>
+                              <Input
+                                value={tier.name}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].name = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Price</Label>
+                              <Input
+                                value={tier.price}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].price = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                                placeholder="KSh 2.50"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Unit</Label>
+                              <Input
+                                value={tier.unit}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].unit = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                                placeholder="per SMS"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Description</Label>
+                              <Input
+                                value={tier.description}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].description = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Icon</Label>
+                              <Select
+                                value={tier.icon}
+                                onValueChange={(value) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].icon = value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                              >
+                                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Rocket">Rocket</SelectItem>
+                                  <SelectItem value="ShieldCheck">ShieldCheck</SelectItem>
+                                  <SelectItem value="Building2">Building2</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Accent Color</Label>
+                              <Select
+                                value={tier.accentColor}
+                                onValueChange={(value: 'teal' | 'indigo' | 'slate') => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].accentColor = value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                              >
+                                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="teal">Teal</SelectItem>
+                                  <SelectItem value="indigo">Indigo</SelectItem>
+                                  <SelectItem value="slate">Slate</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">CTA Button Text</Label>
+                              <Input
+                                value={tier.cta}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].cta = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Secondary CTA</Label>
+                              <Input
+                                value={tier.ctaSecondary}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].ctaSecondary = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={tier.highlighted}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].highlighted = e.target.checked
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="w-4 h-4 text-teal-600 border-[#E5E7EB] rounded"
+                              />
+                              <span className="text-sm text-[#020617]">Highlighted (Most Popular)</span>
+                            </label>
+                          </div>
+                          {tier.highlighted && (
+                            <div>
+                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Highlight Reason</Label>
+                              <Input
+                                value={tier.highlightReason || ''}
+                                onChange={(e) => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].highlightReason = e.target.value
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="border-[#E5E7EB] bg-white text-[#020617]"
+                                placeholder="Best balance of cost + deliverability"
+                              />
+                            </div>
+                          )}
+                          <div>
+                            <Label className="text-sm font-medium text-[#020617] mb-2 block">Features</Label>
+                            <div className="space-y-2">
+                              {tier.features.map((feature, featureIdx) => (
+                                <div key={featureIdx} className="flex gap-2">
+                                  <Input
+                                    value={feature.text}
+                                    onChange={(e) => {
+                                      const newTiers = [...editingMarketingPricing.tiers]
+                                      newTiers[tierIdx].features[featureIdx].text = e.target.value
+                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                    }}
+                                    className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
+                                    placeholder="Feature text"
+                                  />
+                                  <Input
+                                    value={feature.category}
+                                    onChange={(e) => {
+                                      const newTiers = [...editingMarketingPricing.tiers]
+                                      newTiers[tierIdx].features[featureIdx].category = e.target.value
+                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                    }}
+                                    className="w-32 border-[#E5E7EB] bg-white text-[#020617]"
+                                    placeholder="Category"
+                                  />
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={feature.highlight}
+                                      onChange={(e) => {
+                                        const newTiers = [...editingMarketingPricing.tiers]
+                                        newTiers[tierIdx].features[featureIdx].highlight = e.target.checked
+                                        setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                      }}
+                                      className="w-4 h-4 text-teal-600 border-[#E5E7EB] rounded"
+                                    />
+                                    <span className="text-xs text-[#64748B]">Highlight</span>
+                                  </label>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                      const newTiers = [...editingMarketingPricing.tiers]
+                                      newTiers[tierIdx].features = newTiers[tierIdx].features.filter((_, i) => i !== featureIdx)
+                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                    }}
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  const newTiers = [...editingMarketingPricing.tiers]
+                                  newTiers[tierIdx].features.push({ text: '', category: 'Sending', highlight: false })
+                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                }}
+                                className="w-full border-[#E5E7EB] text-[#64748B]"
+                              >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add Feature
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator className="bg-[#E5E7EB]" />
+
+                {/* Volume Discounts */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-[#020617]">Volume Discounts</h3>
+                    <Button
+                      onClick={() => {
+                        setEditingMarketingPricing({
+                          ...editingMarketingPricing,
+                          volumeDiscounts: [
+                            ...editingMarketingPricing.volumeDiscounts,
+                            { volume: '', discount: '', price: '' },
+                          ],
+                        })
+                      }}
+                      size="sm"
+                      className="bg-teal-600 hover:bg-teal-700 text-white"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Discount
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {editingMarketingPricing.volumeDiscounts.map((discount, discountIdx) => (
+                      <div key={discountIdx} className="flex gap-2 items-center">
+                        <Input
+                          value={discount.volume}
+                          onChange={(e) => {
+                            const newDiscounts = [...editingMarketingPricing.volumeDiscounts]
+                            newDiscounts[discountIdx].volume = e.target.value
+                            setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
+                          }}
+                          className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
+                          placeholder="1M - 10M"
+                        />
+                        <Input
+                          value={discount.discount}
+                          onChange={(e) => {
+                            const newDiscounts = [...editingMarketingPricing.volumeDiscounts]
+                            newDiscounts[discountIdx].discount = e.target.value
+                            setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
+                          }}
+                          className="w-32 border-[#E5E7EB] bg-white text-[#020617]"
+                          placeholder="10%"
+                        />
+                        <Input
+                          value={discount.price}
+                          onChange={(e) => {
+                            const newDiscounts = [...editingMarketingPricing.volumeDiscounts]
+                            newDiscounts[discountIdx].price = e.target.value
+                            setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
+                          }}
+                          className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
+                          placeholder="KSh 2.25"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            const newDiscounts = editingMarketingPricing.volumeDiscounts.filter((_, i) => i !== discountIdx)
+                            setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
+                          }}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t border-[#E5E7EB]">
+                  <Button
+                    onClick={handleSaveMarketingPricing}
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-medium"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Marketing Pricing
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowMarketingEditor(false)
+                      setEditingMarketingPricing(null)
+                    }}
+                    className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
 
         {/* Edit Rule Modal */}
         {editingRule && (

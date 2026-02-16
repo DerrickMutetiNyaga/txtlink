@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div className="mb-8">
           <Link href="/" className="text-2xl font-bold text-teal-700 hover:text-teal-800 transition-colors">
-            SignalHub
+            TXTLINK
           </Link>
         </div>
 

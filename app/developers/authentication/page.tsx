@@ -6,17 +6,17 @@ import { Callout } from '@/components/docs/callout'
 import { Card } from '@/components/ui/card'
 
 export default function AuthenticationPage() {
-  const apiKeyExample = `curl https://api.signalhub.com/v1/sms/send \\
+  const apiKeyExample = `curl https://api.txtlink.com/v1/sms/send \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
     "to": "+254712345678",
-    "message": "Hello from SignalHub",
-    "senderId": "SIGNALHUB"
+    "message": "Hello from TXTLINK",
+    "senderId": "TXTLINK"
   }'`
 
   const envExample = `# .env file
-SIGNALHUB_API_KEY=sk_live_abc123xyz...`
+TXTLINK_API_KEY=sk_live_abc123xyz...`
 
   return (
     <DocsLayout>

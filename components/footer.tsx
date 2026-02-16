@@ -53,7 +53,7 @@ export function Footer() {
             <div>
               <Link href="/" className="inline-block">
                 <span className="text-2xl font-bold text-teal-600 hover:text-teal-700 transition-colors">
-                  SignalHub
+                  TXTLINK
                 </span>
               </Link>
             </div>
@@ -261,7 +261,7 @@ export function Footer() {
         <div className="py-8 border-t border-slate-200">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-slate-500">
-              © {currentYear} SignalHub. All rights reserved.
+              © {currentYear} TXTLINK. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-4 text-xs text-slate-500">

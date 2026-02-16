@@ -24,7 +24,7 @@ export default function DevelopersPage() {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            Welcome to SignalHub
+            Welcome to TXTLINK
           </h1>
           <p className="text-xl text-slate-600 leading-relaxed">
             Enterprise SMS infrastructure for mission-critical communications. 
@@ -144,7 +144,7 @@ export default function DevelopersPage() {
                 </div>
                 <ArrowRight className="w-5 h-5 text-slate-400" />
                 <div className="px-6 py-3 bg-teal-600 text-white rounded-lg shadow-sm">
-                  <span className="text-sm font-medium">SignalHub API</span>
+                  <span className="text-sm font-medium">TXTLINK API</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-slate-400" />
                 <div className="px-6 py-3 bg-white rounded-lg border border-slate-200 shadow-sm">

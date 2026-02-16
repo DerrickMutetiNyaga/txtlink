@@ -98,14 +98,14 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8">
           <Link href="/" className="text-2xl font-bold text-teal-700 hover:text-teal-800 transition-colors">
-            SignalHub
+            TXTLINK
           </Link>
         </div>
 
         {/* Card */}
         <Card className="p-8 border-teal-200/50 shadow-xl bg-white/95 backdrop-blur-sm">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600 mb-8">Sign in to your SignalHub account</p>
+          <p className="text-gray-600 mb-8">Sign in to your TXTLINK account</p>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">

@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Enterprise SMS & Messaging Solutions | SignalHub',
+  title: 'Enterprise SMS & Messaging Solutions | TXTLINK',
   description: 'Secure, scalable SMS infrastructure for banks, fintech, healthcare, and government. Sender IDs, bulk SMS, API integration, and compliance solutions.',
   generator: 'v0.app',
 }

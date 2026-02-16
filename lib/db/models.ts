@@ -347,7 +347,7 @@ export interface ISystemSettings {
 
 const SystemSettingsSchema = new Schema<ISystemSettings>(
   {
-    platformName: { type: String, default: 'SignalHub' },
+    platformName: { type: String, default: 'TXTLINK' },
     defaultCurrency: { type: String, default: 'KES' },
     timezone: { type: String, default: 'Africa/Nairobi' },
     dateFormat: { type: String, default: 'YYYY-MM-DD' },
@@ -559,6 +559,77 @@ const PaymentGatewaySchema = new Schema<IPaymentGateway>(
   { timestamps: true }
 )
 
+// Marketing Pricing Model (for public pricing page)
+export interface IMarketingPricing {
+  _id?: string
+  // Pricing Tiers
+  tiers: Array<{
+    name: string
+    price: string
+    priceDecimal?: string
+    unit: string
+    description: string
+    icon: string // Icon name (e.g., 'Rocket', 'ShieldCheck', 'Building2')
+    accentColor: 'teal' | 'indigo' | 'slate'
+    features: Array<{
+      text: string
+      category: string
+      highlight: boolean
+    }>
+    cta: string
+    ctaSecondary: string
+    highlighted: boolean
+    highlightReason?: string
+  }>
+  // Volume Discounts
+  volumeDiscounts: Array<{
+    volume: string
+    discount: string
+    price: string
+  }>
+  // Page Settings
+  pageTitle: string
+  pageSubtitle: string
+  updatedBy: mongoose.Types.ObjectId
+  createdAt: Date
+  updatedAt: Date
+}
+
+const MarketingPricingSchema = new Schema<IMarketingPricing>(
+  {
+    tiers: [{
+      name: { type: String, required: true },
+      price: { type: String, required: true },
+      priceDecimal: { type: String },
+      unit: { type: String, required: true },
+      description: { type: String, required: true },
+      icon: { type: String, required: true },
+      accentColor: { type: String, enum: ['teal', 'indigo', 'slate'], default: 'teal' },
+      features: [{
+        text: { type: String, required: true },
+        category: { type: String, required: true },
+        highlight: { type: Boolean, default: false },
+      }],
+      cta: { type: String, required: true },
+      ctaSecondary: { type: String, required: true },
+      highlighted: { type: Boolean, default: false },
+      highlightReason: { type: String },
+    }],
+    volumeDiscounts: [{
+      volume: { type: String, required: true },
+      discount: { type: String, required: true },
+      price: { type: String, required: true },
+    }],
+    pageTitle: { type: String, default: 'Simple, Transparent Pricing' },
+    pageSubtitle: { type: String, default: 'Scale your messaging without hidden fees. Only pay for what you send.' },
+    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  },
+  { timestamps: true }
+)
+
+// Ensure only one marketing pricing document exists (singleton)
+MarketingPricingSchema.index({}, { unique: true })
+
 // Export models
 export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)
 export const HostPinnacleAccount: Model<IHostPinnacleAccount> =
@@ -588,4 +659,6 @@ export const MpesaTransaction: Model<IMpesaTransaction> =
   mongoose.models.MpesaTransaction || mongoose.model<IMpesaTransaction>('MpesaTransaction', MpesaTransactionSchema)
 export const PaymentGateway: Model<IPaymentGateway> =
   mongoose.models.PaymentGateway || mongoose.model<IPaymentGateway>('PaymentGateway', PaymentGatewaySchema)
+export const MarketingPricing: Model<IMarketingPricing> =
+  mongoose.models.MarketingPricing || mongoose.model<IMarketingPricing>('MarketingPricing', MarketingPricingSchema)
 

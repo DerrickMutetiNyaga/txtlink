@@ -92,7 +92,7 @@ export default function ContactPage() {
       title: 'Technical Support',
       description: 'API integration, technical issues, and troubleshooting',
       responseTime: '~2 hours',
-      action: 'mailto:support@signalhub.io',
+      action: 'mailto:info@txtlink.co.ke',
       actionText: 'Email Support',
     },
     {
@@ -173,7 +173,7 @@ export default function ContactPage() {
                 </div>
 
                 <h1 className="text-5xl md:text-6xl font-bold text-[#0B1220] mb-4 leading-tight tracking-tight">
-                  Contact SignalHub
+                  Contact TXTLINK
                 </h1>
                 <p className="text-xl text-[#334155] mb-8 leading-relaxed">
                   Enterprise SMS solutions with carrier-grade delivery. We respond fast—usually within 2 hours.
@@ -243,8 +243,8 @@ export default function ContactPage() {
                       <Mail className="w-5 h-5 text-[#0F766E] mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm font-medium text-[#0B1220]">Email</p>
-                        <a href="mailto:support@signalhub.io" className="text-sm text-[#0F766E] hover:underline">
-                          support@signalhub.io
+                        <a href="mailto:info@txtlink.co.ke" className="text-sm text-[#0F766E] hover:underline">
+                          info@txtlink.co.ke
                         </a>
                       </div>
                     </div>
@@ -494,7 +494,7 @@ export default function ContactPage() {
                       </div>
                     </a>
                     <a
-                      href="mailto:support@signalhub.io"
+                      href="mailto:info@txtlink.co.ke"
                       className="flex items-center gap-3 p-3.5 bg-white rounded-xl border border-[#E2E8F0] hover:border-[#0F766E] hover:bg-white hover:shadow-sm transition-all duration-200 group"
                     >
                       <div className="w-10 h-10 rounded-lg bg-[#ECFDF5] flex items-center justify-center group-hover:bg-[#0F766E]/10 transition-colors">
@@ -502,7 +502,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <span className="text-sm font-semibold text-[#0B1220] block">Email Support</span>
-                        <span className="text-xs text-[#64748B]">support@signalhub.io</span>
+                        <span className="text-xs text-[#64748B]">info@txtlink.co.ke</span>
                       </div>
                     </a>
                   </div>
@@ -662,7 +662,7 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-[#0B1220] mb-4">Frequently Asked Questions</h2>
-              <p className="text-lg text-[#64748B]">Common questions about SignalHub</p>
+              <p className="text-lg text-[#64748B]">Common questions about TXTLINK</p>
             </div>
 
             <Accordion type="single" collapsible className="w-full space-y-3">

@@ -140,7 +140,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
         <div className="p-4 border-b border-slate-200 lg:hidden">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-xl font-bold text-teal-600">
-              SignalHub
+              TXTLINK
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -229,7 +229,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
               href="/"
               className="text-lg font-bold text-teal-600 hover:text-teal-700"
             >
-              SignalHub
+              TXTLINK
             </Link>
             <div className="flex-1" />
             <Link
