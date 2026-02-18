@@ -330,9 +330,9 @@ export interface ISystemSettings {
   smsSendingEnabled: boolean
   
   // M-Pesa Configuration
-  mpesaConsumerKey?: string // Encrypted
-  mpesaConsumerSecret?: string // Encrypted
-  mpesaPasskey?: string // Encrypted
+  mpesaConsumerKey?: string
+  mpesaConsumerSecret?: string
+  mpesaPasskey?: string
   mpesaShortcode?: string // Paybill/Till Number
   mpesaConfirmationUrl?: string
   mpesaValidationUrl?: string

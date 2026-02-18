@@ -9,7 +9,6 @@ import connectDB from '@/lib/db/connect'
 import { SystemSettings } from '@/lib/db/models'
 import { requireOwner } from '@/lib/auth/middleware'
 import { logAudit } from '@/lib/utils/audit'
-import { encrypt } from '@/lib/utils/encryption'
 import mongoose from 'mongoose'
 
 export async function GET(request: NextRequest) {
@@ -39,10 +38,6 @@ export async function GET(request: NextRequest) {
     // Mask M-Pesa credentials
     const maskValue = (value: string | undefined) => {
       if (!value) return undefined
-      if (value.includes(':')) {
-        // Encrypted value - show masked
-        return '••••••••••••••••'
-      }
       return value.length > 8 
         ? value.substring(0, 4) + '••••••••' + value.substring(value.length - 4)
         : '••••••••'
@@ -175,13 +170,13 @@ export async function POST(request: NextRequest) {
 
     // M-Pesa Configuration
     if (mpesaConsumerKey !== undefined && mpesaConsumerKey !== '' && !mpesaConsumerKey.includes('••••')) {
-      updateData.mpesaConsumerKey = encrypt(mpesaConsumerKey)
+      updateData.mpesaConsumerKey = mpesaConsumerKey
     }
     if (mpesaConsumerSecret !== undefined && mpesaConsumerSecret !== '' && !mpesaConsumerSecret.includes('••••')) {
-      updateData.mpesaConsumerSecret = encrypt(mpesaConsumerSecret)
+      updateData.mpesaConsumerSecret = mpesaConsumerSecret
     }
     if (mpesaPasskey !== undefined && mpesaPasskey !== '' && !mpesaPasskey.includes('••••')) {
-      updateData.mpesaPasskey = encrypt(mpesaPasskey)
+      updateData.mpesaPasskey = mpesaPasskey
     }
     if (mpesaShortcode !== undefined) updateData.mpesaShortcode = mpesaShortcode
     if (mpesaConfirmationUrl !== undefined) updateData.mpesaConfirmationUrl = mpesaConfirmationUrl
@@ -242,10 +237,6 @@ export async function POST(request: NextRequest) {
     // Mask M-Pesa credentials
     const maskValue = (value: string | undefined) => {
       if (!value) return undefined
-      if (value.includes(':')) {
-        // Encrypted value - show masked
-        return '••••••••••••••••'
-      }
       return value.length > 8 
         ? value.substring(0, 4) + '••••••••' + value.substring(value.length - 4)
         : '••••••••'

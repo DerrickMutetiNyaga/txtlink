@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
     await connectDB()
 
     const body = await request.json()
+
+    console.log('C2B Confirmation received:', body)
     
     // M-Pesa C2B confirmation structure
     const {

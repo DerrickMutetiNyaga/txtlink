@@ -4,7 +4,6 @@
  */
 
 import crypto from 'crypto'
-import { decrypt } from '@/lib/utils/encryption'
 
 interface MpesaConfig {
   consumerKey: string
@@ -308,7 +307,6 @@ export class MpesaService {
 
   /**
    * Get M-Pesa configuration from SystemSettings
-   * Decrypts encrypted fields
    */
   static async getMpesaConfig(): Promise<MpesaConfig | null> {
     const { SystemSettings } = await import('@/lib/db/models')
@@ -321,24 +319,13 @@ export class MpesaService {
       return null
     }
 
-    try {
-      return {
-        consumerKey: settings.mpesaConsumerKey.includes(':') 
-          ? decrypt(settings.mpesaConsumerKey) 
-          : settings.mpesaConsumerKey,
-        consumerSecret: settings.mpesaConsumerSecret && settings.mpesaConsumerSecret.includes(':')
-          ? decrypt(settings.mpesaConsumerSecret)
-          : settings.mpesaConsumerSecret || '',
-        passkey: settings.mpesaPasskey && settings.mpesaPasskey.includes(':')
-          ? decrypt(settings.mpesaPasskey)
-          : settings.mpesaPasskey || '',
-        shortcode: settings.mpesaShortcode || '',
-        callbackUrl: settings.mpesaCallbackUrl || '',
-        environment: settings.mpesaEnvironment || 'sandbox',
-      }
-    } catch (error) {
-      console.error('Error decrypting M-Pesa config:', error)
-      return null
+    return {
+      consumerKey: settings.mpesaConsumerKey || '',
+      consumerSecret: settings.mpesaConsumerSecret || '',
+      passkey: settings.mpesaPasskey || '',
+      shortcode: settings.mpesaShortcode || '',
+      callbackUrl: settings.mpesaCallbackUrl || '',
+      environment: settings.mpesaEnvironment || 'sandbox',
     }
   }
 
