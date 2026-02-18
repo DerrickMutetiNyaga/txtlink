@@ -154,7 +154,24 @@ export class MpesaService {
       const data = await response.json()
 
       if (data.ResponseCode !== '0') {
-        throw new Error(`STK Push error: ${data.ResponseDescription || data.errorMessage || 'Unknown error'}`)
+        // Map common M-Pesa error codes to user-friendly messages
+        const errorMessages: Record<string, string> = {
+          '1032': 'Payment was cancelled. Please try again.',
+          '1037': 'Payment request timed out. Please check your phone and try again.',
+          '1': 'Invalid request. Please check your details and try again.',
+          '2': 'Invalid subscriber information. Please verify your phone number.',
+          '3': 'Subscriber is not on the network. Please check your phone connection.',
+          '4': 'Insufficient funds. Please ensure you have enough balance in your M-Pesa account.',
+          '5': 'Transaction limit exceeded. Please try a smaller amount.',
+          '17': 'Transaction could not be processed. Please try again later.',
+          '20': 'Invalid request. Please check your details and try again.',
+          '26': 'Transaction could not be completed. Please try again.',
+        }
+        
+        const errorCode = data.ResponseCode?.toString()
+        const userFriendlyMessage = errorMessages[errorCode] || data.ResponseDescription || data.errorMessage || 'Failed to initiate payment. Please try again.'
+        
+        throw new Error(userFriendlyMessage)
       }
 
       return {

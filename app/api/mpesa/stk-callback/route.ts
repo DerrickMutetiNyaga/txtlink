@@ -42,10 +42,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ResultCode: 1, ResultDesc: 'Transaction not found' }, { status: 404 })
     }
 
-    // Update transaction status
+    // Update transaction status with better error handling
     let status: 'pending' | 'success' | 'failed' | 'cancelled' | 'timeout' = 'pending'
     let mpesaReceiptNumber: string | undefined
     let amount: number | undefined
+    let errorMessage: string | undefined
 
     if (ResultCode === 0) {
       // Success
@@ -64,22 +65,49 @@ export async function POST(request: NextRequest) {
       }
     } else if (ResultCode === 1032) {
       status = 'cancelled'
+      errorMessage = 'Payment was cancelled by user. Please try again.'
     } else if (ResultCode === 1037) {
       status = 'timeout'
+      errorMessage = 'Payment request timed out. Please try again.'
     } else {
       status = 'failed'
+      // Map common M-Pesa error codes to user-friendly messages
+      const errorMessages: Record<number, string> = {
+        1: 'The initiator information is invalid.',
+        2: 'The subscriber information is invalid.',
+        3: 'The subscriber is not on the network.',
+        4: 'The subscriber has insufficient funds.',
+        5: 'The subscriber has exceeded the transaction limit.',
+        6: 'The transaction has already been processed.',
+        7: 'The transaction has been reversed.',
+        8: 'The transaction has been declined.',
+        17: 'The transaction could not be processed. Please try again.',
+        20: 'Invalid request. Please check your details and try again.',
+        26: 'The transaction could not be completed. Please try again.',
+      }
+      errorMessage = errorMessages[ResultCode] || ResultDesc || 'Payment failed. Please try again.'
     }
 
-    // Update M-Pesa transaction
+    // Update M-Pesa transaction with enhanced error information
     mpesaTransaction.status = status
     mpesaTransaction.responseCode = ResultCode?.toString()
-    mpesaTransaction.resultDesc = ResultDesc
+    mpesaTransaction.resultDesc = errorMessage || ResultDesc || 'Unknown error'
     mpesaTransaction.mpesaReceiptNumber = mpesaReceiptNumber
     mpesaTransaction.rawResponse = body
     if (amount) {
       mpesaTransaction.amount = amount
     }
     await mpesaTransaction.save()
+
+    // Log transaction status for debugging
+    console.log(`STK Callback processed:`, {
+      checkoutRequestId: CheckoutRequestID,
+      status,
+      resultCode: ResultCode,
+      resultDesc: errorMessage || ResultDesc,
+      mpesaReceiptNumber,
+      amount,
+    })
 
     // If payment was successful, process the top-up
     if (status === 'success' && mpesaTransaction.userId) {

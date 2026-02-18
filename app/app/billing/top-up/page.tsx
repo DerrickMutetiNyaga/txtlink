@@ -3,10 +3,12 @@
 import { PortalLayout } from '@/components/portal-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
-import { ArrowLeft, Phone, CreditCard, Wallet } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { ArrowLeft, Phone, CreditCard, Wallet, CheckCircle2, XCircle, Clock, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
+type PaymentStatus = 'idle' | 'pending' | 'success' | 'failed' | 'cancelled' | 'timeout'
 
 export default function TopUpPage() {
   const router = useRouter()
@@ -16,9 +18,87 @@ export default function TopUpPage() {
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [pending, setPending] = useState(false)
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle')
+  const [statusMessage, setStatusMessage] = useState<string>('')
+  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null)
+  const [transactionId, setTransactionId] = useState<string | null>(null)
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const pollCountRef = useRef<number>(0)
 
   const presets = [1000, 2500, 5000, 10000]
+  const MAX_POLL_ATTEMPTS = 60 // Poll for up to 5 minutes (60 * 5 seconds)
+  const POLL_INTERVAL = 5000 // 5 seconds
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+    }
+  }, [])
+
+  // Poll for payment status
+  const checkPaymentStatus = async (checkoutId: string, transId: string | null) => {
+    try {
+      const token = localStorage.getItem('token')
+      const params = new URLSearchParams()
+      if (checkoutId) params.append('checkoutRequestId', checkoutId)
+      if (transId) params.append('transactionId', transId)
+
+      const response = await fetch(`/api/user/topup/status?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        return
+      }
+
+      const data = await response.json()
+      
+      if (data.status === 'success') {
+        setPaymentStatus('success')
+        setStatusMessage(data.message || 'Payment successful! Your account has been credited.')
+        setSuccess(data.message || 'Payment successful! Your account has been credited.')
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+        }
+        // Redirect to billing page after 3 seconds
+        setTimeout(() => {
+          router.push('/app/billing')
+        }, 3000)
+      } else if (data.status === 'failed' || data.status === 'cancelled' || data.status === 'timeout') {
+        setPaymentStatus(data.status)
+        setStatusMessage(data.message || 'Payment failed. Please try again.')
+        setError(data.message || 'Payment failed. Please try again.')
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+        }
+      } else if (data.status === 'pending') {
+        setPaymentStatus('pending')
+        setStatusMessage(data.message || 'Waiting for payment confirmation...')
+      }
+
+      pollCountRef.current++
+      if (pollCountRef.current >= MAX_POLL_ATTEMPTS) {
+        // Stop polling after max attempts
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+        }
+        if (data.status === 'pending') {
+          setPaymentStatus('failed')
+          setError('Payment status check timed out. Please check your balance or contact support.')
+        }
+      }
+    } catch (err) {
+      console.error('Error checking payment status:', err)
+    }
+  }
 
   const handleTopUp = async () => {
     if (!amount || amount <= 0) {
@@ -34,7 +114,17 @@ export default function TopUpPage() {
     setProcessing(true)
     setError(null)
     setSuccess(null)
-    setPending(false)
+    setPaymentStatus('idle')
+    setStatusMessage('')
+    setCheckoutRequestId(null)
+    setTransactionId(null)
+    pollCountRef.current = 0
+
+    // Clear any existing polling
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current)
+      pollingIntervalRef.current = null
+    }
 
     try {
       const token = localStorage.getItem('token')
@@ -57,15 +147,23 @@ export default function TopUpPage() {
       }
 
       // STK Push initiated successfully - payment is pending
-      setPending(true)
-      setSuccess(
-        data.message || 'STK Push request sent. Please check your phone and enter your M-Pesa PIN to complete the payment.'
-      )
+      setPaymentStatus('pending')
+      setStatusMessage(data.message || 'STK Push request sent. Please check your phone and enter your M-Pesa PIN to complete the payment.')
+      setSuccess(data.message || 'STK Push request sent. Please check your phone and enter your M-Pesa PIN to complete the payment.')
+      setCheckoutRequestId(data.checkoutRequestId)
+      setTransactionId(data.transactionId)
 
-      // Poll for payment status (optional - can be done via webhooks)
-      // For now, we'll just show the pending message and let the callback handle it
+      // Start polling for payment status
+      if (data.checkoutRequestId || data.transactionId) {
+        // Poll immediately, then every 5 seconds
+        checkPaymentStatus(data.checkoutRequestId, data.transactionId)
+        pollingIntervalRef.current = setInterval(() => {
+          checkPaymentStatus(data.checkoutRequestId, data.transactionId)
+        }, POLL_INTERVAL)
+      }
       
     } catch (err: any) {
+      setPaymentStatus('failed')
       setError(err.message || 'Failed to process top-up. Please try again.')
       console.error('Top-up error:', err)
     } finally {
@@ -204,23 +302,67 @@ export default function TopUpPage() {
                 </p>
               </div>
 
-              {error && (
-                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
-                  {error}
+              {/* Error Message */}
+              {error && paymentStatus !== 'pending' && (
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-red-900 mb-1">Payment Failed</p>
+                      <p className="text-xs text-red-700">{error}</p>
+                    </div>
+                  </div>
                 </div>
               )}
-              {pending && (
+
+              {/* Pending Status */}
+              {paymentStatus === 'pending' && (
                 <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
-                  <p className="text-sm font-medium text-amber-900 mb-2">⏳ Payment Pending</p>
-                  <p className="text-xs text-amber-700 mb-2">{success}</p>
-                  <p className="text-xs text-amber-600">
-                    Your account will be credited automatically once payment is confirmed. You can close this page and check your balance later.
-                  </p>
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5 animate-pulse" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-amber-900 mb-1">Payment Pending</p>
+                      <p className="text-xs text-amber-700 mb-2">{statusMessage || success}</p>
+                      <p className="text-xs text-amber-600">
+                        Please complete the payment on your phone. Your account will be credited automatically once payment is confirmed.
+                      </p>
+                      <div className="mt-2 flex items-center gap-2 text-xs text-amber-600">
+                        <RefreshCw className="w-3 h-3 animate-spin" />
+                        <span>Checking payment status...</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
-              {success && !pending && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-700">
-                  {success}
+
+              {/* Success Status */}
+              {paymentStatus === 'success' && (
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-emerald-900 mb-1">Payment Successful!</p>
+                      <p className="text-xs text-emerald-700 mb-2">{statusMessage || success}</p>
+                      <p className="text-xs text-emerald-600">
+                        Redirecting to billing page...
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Cancelled/Timeout Status */}
+              {(paymentStatus === 'cancelled' || paymentStatus === 'timeout') && (
+                <div className="p-4 rounded-xl bg-orange-50 border border-orange-200">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-orange-900 mb-1">
+                        {paymentStatus === 'cancelled' ? 'Payment Cancelled' : 'Payment Timeout'}
+                      </p>
+                      <p className="text-xs text-orange-700">{statusMessage || error}</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -232,10 +374,10 @@ export default function TopUpPage() {
                 </Link>
                 <Button
                   onClick={handleTopUp}
-                  disabled={!amount || !phoneNumber || processing || pending}
+                  disabled={!amount || !phoneNumber || processing || paymentStatus === 'pending' || paymentStatus === 'success'}
                   className="flex-1 bg-gradient-to-r from-[#059669] to-[#14B8A6] text-white hover:shadow-lg disabled:opacity-50"
                 >
-                  {processing ? 'Sending STK Push...' : pending ? 'Payment Pending...' : `Send STK Push (${amount ? `KSh ${amount.toLocaleString()}` : 'Amount'})`}
+                  {processing ? 'Sending STK Push...' : paymentStatus === 'pending' ? 'Payment Pending...' : paymentStatus === 'success' ? 'Payment Successful!' : `Send STK Push (${amount ? `KSh ${amount.toLocaleString()}` : 'Amount'})`}
                 </Button>
               </div>
             </form>
