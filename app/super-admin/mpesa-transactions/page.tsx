@@ -58,6 +58,8 @@ interface MpesaTransaction {
 export default function MpesaTransactionsPage() {
   const [transactions, setTransactions] = useState<MpesaTransaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
   const [filters, setFilters] = useState({
     status: '',
     transactionType: '',
@@ -73,14 +75,36 @@ export default function MpesaTransactionsPage() {
     pages: 0,
   })
 
+  // Ensure component is mounted before making API calls
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     fetchTransactions()
-  }, [filters, pagination.page])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    mounted,
+    filters.status,
+    filters.transactionType,
+    filters.phoneNumber,
+    filters.startDate,
+    filters.endDate,
+    filters.search,
+    pagination.page,
+  ])
 
   const fetchTransactions = async () => {
     try {
       setLoading(true)
+      setError(null)
       const token = localStorage.getItem('token')
+      
+      if (!token) {
+        window.location.href = '/auth/login'
+        return
+      }
       const params = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
@@ -108,10 +132,20 @@ export default function MpesaTransactionsPage() {
       }
 
       const result = await response.json()
-      setTransactions(result.data)
-      setPagination(result.pagination)
-    } catch (error) {
+      
+      if (result.success && result.data) {
+        setTransactions(result.data)
+        if (result.pagination) {
+          setPagination(result.pagination)
+        }
+      } else {
+        console.error('Invalid response format:', result)
+        setTransactions([])
+      }
+    } catch (error: any) {
       console.error('Error fetching transactions:', error)
+      setTransactions([])
+      setError(error.message || 'Failed to load transactions')
     } finally {
       setLoading(false)
     }
@@ -132,12 +166,14 @@ export default function MpesaTransactionsPage() {
     const rows = transactions.map((t) => [
       new Date(t.createdAt).toLocaleString(),
       t.transactionType,
-      t.amount.toFixed(2),
-      t.phoneNumber,
-      t.accountReference,
-      t.status,
+      t.amount?.toFixed(2) || '0.00',
+      t.phoneNumber || '-',
+      t.accountReference || '-',
+      t.status || 'unknown',
       t.mpesaReceiptNumber || '-',
-      t.userId ? `${t.userId.name} (${t.userId.email})` : '-',
+      t.userId && typeof t.userId === 'object' 
+        ? `${t.userId.name || ''} (${t.userId.email || ''})`.trim() || '-'
+        : '-',
     ])
 
     const csv = [headers, ...rows].map((row) => row.join(',')).join('\n')
@@ -162,6 +198,17 @@ export default function MpesaTransactionsPage() {
       <Badge variant="outline" className={variants[status] || ''}>
         {status.toUpperCase()}
       </Badge>
+    )
+  }
+
+  if (!mounted) {
+    return (
+      <div className="p-6 lg:p-8 bg-[#F8FAFC] min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-slate-400 mx-auto mb-4" />
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
     )
   }
 
@@ -311,6 +358,19 @@ export default function MpesaTransactionsPage() {
               <RefreshCw className="w-8 h-8 animate-spin text-slate-400 mx-auto mb-4" />
               <p className="text-slate-600">Loading transactions...</p>
             </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <FileText className="w-12 h-12 text-red-400 mx-auto mb-4" />
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button
+                onClick={fetchTransactions}
+                variant="outline"
+                className="border-[#E5E7EB] text-[#020617]"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+            </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4" />
@@ -355,8 +415,14 @@ export default function MpesaTransactionsPage() {
                         <TableCell className="text-sm">
                           {transaction.userId ? (
                             <div>
-                              <div className="font-medium">{transaction.userId.name}</div>
-                              <div className="text-xs text-slate-500">{transaction.userId.email}</div>
+                              <div className="font-medium">
+                                {typeof transaction.userId === 'object' 
+                                  ? transaction.userId.name || transaction.userId.email || '-'
+                                  : '-'}
+                              </div>
+                              {typeof transaction.userId === 'object' && transaction.userId.email && (
+                                <div className="text-xs text-slate-500">{transaction.userId.email}</div>
+                              )}
                             </div>
                           ) : (
                             '-'
