@@ -698,7 +698,7 @@ export default function SuperAdminSettingsPage() {
                       value={formData.mpesaConsumerKey || ''}
                       onChange={(e) => updateField('mpesaConsumerKey', e.target.value)}
                       className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
-                      placeholder="Enter Consumer Key"
+                      placeholder="e.g., your_consumer_key_from_mpesa_portal"
                     />
                     <button
                       type="button"
@@ -718,7 +718,7 @@ export default function SuperAdminSettingsPage() {
                       value={formData.mpesaConsumerSecret || ''}
                       onChange={(e) => updateField('mpesaConsumerSecret', e.target.value)}
                       className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
-                      placeholder="Enter Consumer Secret"
+                      placeholder="e.g., your_consumer_secret_from_mpesa_portal"
                     />
                     <button
                       type="button"
@@ -738,7 +738,7 @@ export default function SuperAdminSettingsPage() {
                       value={formData.mpesaPasskey || ''}
                       onChange={(e) => updateField('mpesaPasskey', e.target.value)}
                       className="border-[#E5E7EB] bg-white text-[#020617] pr-10"
-                      placeholder="Enter Passkey"
+                      placeholder="e.g., your_passkey_from_mpesa_portal"
                     />
                     <button
                       type="button"
@@ -756,7 +756,7 @@ export default function SuperAdminSettingsPage() {
                     value={formData.mpesaShortcode || ''}
                     onChange={(e) => updateField('mpesaShortcode', e.target.value)}
                     className="border-[#E5E7EB] bg-white text-[#020617]"
-                    placeholder="e.g., 174379"
+                    placeholder="e.g., 174379 or your paybill/till number"
                   />
                 </div>
 
