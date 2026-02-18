@@ -70,7 +70,6 @@ export class MpesaService {
     }
 
     const data = await response.json()
-    console.log('Access Token:', data.access_token)
     return data.access_token
   }
 
@@ -220,10 +219,11 @@ export class MpesaService {
       console.log('Short Code on C2B registration:', this.config.shortcode)
       console.log('Confirmation URL on C2B registration:', confirmationUrl)
       console.log('Validation URL on C2B registration:', validationUrl)
+      console.log('Base URL on C2B registration:', this.baseUrl+'/mpesa/c2b/v2/registerurl')
 
       const payload = {
         ShortCode: this.config.shortcode,
-        ResponseType: 'Completed', // As per M-Pesa API documentation
+        ResponseType: 'Completed', // As per M-Pesa API documentation mpesa/c2b/v2/registerurl
         ConfirmationURL: confirmationUrl,
         ValidationURL: validationUrl,
       }
