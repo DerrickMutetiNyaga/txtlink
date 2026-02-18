@@ -265,14 +265,14 @@ export default function MpesaTransactionsPage() {
             <div>
               <Label className="text-sm font-medium text-[#020617] mb-2 block">Status</Label>
               <Select
-                value={filters.status}
-                onValueChange={(value) => setFilters({ ...filters, status: value })}
+                value={filters.status || undefined}
+                onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
               >
                 <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="success">Success</SelectItem>
                   <SelectItem value="failed">Failed</SelectItem>
@@ -285,14 +285,14 @@ export default function MpesaTransactionsPage() {
             <div>
               <Label className="text-sm font-medium text-[#020617] mb-2 block">Type</Label>
               <Select
-                value={filters.transactionType}
-                onValueChange={(value) => setFilters({ ...filters, transactionType: value })}
+                value={filters.transactionType || undefined}
+                onValueChange={(value) => setFilters({ ...filters, transactionType: value === 'all' ? '' : value })}
               >
                 <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="STK">STK Push</SelectItem>
                   <SelectItem value="C2B">C2B</SelectItem>
                 </SelectContent>
