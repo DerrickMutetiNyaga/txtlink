@@ -53,6 +53,10 @@ export class MpesaService {
   private async getAccessToken(): Promise<string> {
     const auth = Buffer.from(`${this.config.consumerKey}:${this.config.consumerSecret}`).toString('base64')
 
+    console.log('Consumer Key:', this.config.consumerKey)
+    console.log('Consumer Secret:', this.config.consumerSecret)
+
+
     const response = await fetch(`${this.baseUrl}/oauth/v1/generate?grant_type=client_credentials`, {
       method: 'GET',
       headers: {
@@ -66,6 +70,7 @@ export class MpesaService {
     }
 
     const data = await response.json()
+    console.log('Access Token:', data.access_token)
     return data.access_token
   }
 
@@ -211,9 +216,14 @@ export class MpesaService {
     try {
       const accessToken = await this.getAccessToken()
 
+      console.log('Access Token on C2B registration:', accessToken)
+      console.log('Short Code on C2B registration:', this.config.shortcode)
+      console.log('Confirmation URL on C2B registration:', confirmationUrl)
+      console.log('Validation URL on C2B registration:', validationUrl)
+
       const payload = {
         ShortCode: this.config.shortcode,
-        ResponseType: 'Either Cancelled or Completed', // As per M-Pesa API documentation
+        ResponseType: 'Completed', // As per M-Pesa API documentation
         ConfirmationURL: confirmationUrl,
         ValidationURL: validationUrl,
       }
@@ -234,6 +244,8 @@ export class MpesaService {
       }
 
       const data = await response.json()
+
+      console.log('Data on C2B registration:', data)
 
       if (data.ResponseCode !== '0') {
         throw new Error(`C2B registration error: ${data.ResponseDescription || 'Unknown error'}`)
