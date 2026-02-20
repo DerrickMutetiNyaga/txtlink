@@ -268,8 +268,11 @@ export default function SuperAdminSettingsPage() {
             <AlertTriangle className="w-12 h-12 text-rose-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Failed to load settings</h3>
             <p className="text-slate-600 mb-6">Unable to fetch system settings. Please try again.</p>
-            <Button onClick={fetchSettings} variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <Button
+              onClick={fetchSettings}
+              variant="secondary"
+            >
+              <RefreshCw className="w-4 h-4" />
               Retry
             </Button>
           </Card>
@@ -290,16 +293,16 @@ export default function SuperAdminSettingsPage() {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-[#FACC15] hover:bg-[#EAB308] text-[#020617] font-medium"
+            variant="primary"
           >
             {saving ? (
               <>
-                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin" />
                 Saving...
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
+                <Save className="w-4 h-4" />
                 Save Changes
               </>
             )}
@@ -394,10 +397,10 @@ export default function SuperAdminSettingsPage() {
                   value={formData.environment || 'production'}
                   onValueChange={(value: 'production' | 'sandbox') => updateField('environment', value)}
                 >
-                  <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                  <SelectTrigger className="!w-full !rounded-xl !border !border-slate-200 !bg-white !px-4 !py-3 !text-slate-900 !focus:outline-none !focus:ring-2 !focus:ring-emerald-500 !focus:ring-offset-0 !focus:border-emerald-500 !transition [&_svg]:!text-slate-400 [&_svg]:!absolute [&_svg]:!right-3 [&_svg]:!pointer-events-none">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
                     <SelectItem value="production">Production</SelectItem>
                     <SelectItem value="sandbox">Sandbox</SelectItem>
                   </SelectContent>
@@ -489,6 +492,7 @@ export default function SuperAdminSettingsPage() {
                 <Switch
                   checked={formData.deliveryReportWebhookEnabled || false}
                   onCheckedChange={(checked) => updateField('deliveryReportWebhookEnabled', checked)}
+                  variant="default"
                 />
               </div>
             </div>
@@ -536,6 +540,7 @@ export default function SuperAdminSettingsPage() {
                 <Switch
                   checked={formData.defaultChargeOnFailure || false}
                   onCheckedChange={(checked) => updateField('defaultChargeOnFailure', checked)}
+                  variant="default"
                 />
               </div>
 
@@ -547,6 +552,7 @@ export default function SuperAdminSettingsPage() {
                 <Switch
                   checked={formData.defaultRefundOnFailure !== false}
                   onCheckedChange={(checked) => updateField('defaultRefundOnFailure', checked)}
+                  variant="default"
                 />
               </div>
             </div>
@@ -571,6 +577,7 @@ export default function SuperAdminSettingsPage() {
               <Switch
                 checked={formData.requireSenderIdApproval !== false}
                 onCheckedChange={(checked) => updateField('requireSenderIdApproval', checked)}
+                variant="default"
               />
             </div>
 
@@ -582,6 +589,7 @@ export default function SuperAdminSettingsPage() {
               <Switch
                 checked={formData.logAllAdminActions !== false}
                 onCheckedChange={(checked) => updateField('logAllAdminActions', checked)}
+                variant="default"
               />
             </div>
 
@@ -593,6 +601,7 @@ export default function SuperAdminSettingsPage() {
               <Switch
                 checked={formData.lockPricingEditsToSuperAdmin !== false}
                 onCheckedChange={(checked) => updateField('lockPricingEditsToSuperAdmin', checked)}
+                variant="default"
               />
             </div>
 
@@ -604,6 +613,7 @@ export default function SuperAdminSettingsPage() {
               <Switch
                 checked={formData.enableIpLogging !== false}
                 onCheckedChange={(checked) => updateField('enableIpLogging', checked)}
+                variant="default"
               />
             </div>
           </div>
@@ -683,6 +693,7 @@ export default function SuperAdminSettingsPage() {
               <Switch
                 checked={formData.mpesaEnabled || false}
                 onCheckedChange={(checked) => updateField('mpesaEnabled', checked)}
+                variant="default"
               />
             </div>
           </div>
@@ -766,10 +777,10 @@ export default function SuperAdminSettingsPage() {
                     value={formData.mpesaEnvironment || 'sandbox'}
                     onValueChange={(value: 'sandbox' | 'production') => updateField('mpesaEnvironment', value)}
                   >
-                    <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                    <SelectTrigger className="!w-full !rounded-xl !border !border-slate-200 !bg-white !px-4 !py-3 !text-slate-900 !focus:outline-none !focus:ring-2 !focus:ring-emerald-500 !focus:ring-offset-0 !focus:border-emerald-500 !transition [&_svg]:!text-slate-400 [&_svg]:!absolute [&_svg]:!right-3 [&_svg]:!pointer-events-none">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
                       <SelectItem value="sandbox">Sandbox</SelectItem>
                       <SelectItem value="production">Production</SelectItem>
                     </SelectContent>
@@ -825,16 +836,16 @@ export default function SuperAdminSettingsPage() {
                   <Button
                     onClick={handleRegisterC2BUrls}
                     disabled={registeringUrls || !formData.mpesaValidationUrl || !formData.mpesaConfirmationUrl}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    variant="secondary"
                   >
                     {registeringUrls ? (
                       <>
-                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        <RefreshCw className="w-4 h-4 animate-spin" />
                         Registering...
                       </>
                     ) : (
                       <>
-                        <Key className="w-4 h-4 mr-2" />
+                        <Key className="w-4 h-4" />
                         Register C2B URLs
                       </>
                     )}
@@ -876,16 +887,17 @@ export default function SuperAdminSettingsPage() {
                       <Button
                         onClick={handleSimulateC2B}
                         disabled={simulating || !simulationData.phoneNumber || !simulationData.amount}
-                        className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                        variant="secondary"
+                        className="w-full"
                       >
                         {simulating ? (
                           <>
-                            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                            <RefreshCw className="w-4 h-4 animate-spin" />
                             Simulating...
                           </>
                         ) : (
                           <>
-                            <Phone className="w-4 h-4 mr-2" />
+                            <Phone className="w-4 h-4" />
                             Simulate C2B Payment
                           </>
                         )}
@@ -899,70 +911,73 @@ export default function SuperAdminSettingsPage() {
         </Card>
 
         {/* SECTION 7: DANGER ZONE */}
-        <Card className="bg-white border-2 border-red-200 rounded-xl shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-lg bg-red-50">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-            </div>
-            <h2 className="text-xl font-semibold text-red-600">Danger Zone</h2>
+        <Card className="bg-white border border-red-200 rounded-2xl shadow-sm p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-red-700 mb-1">Danger Zone</h2>
+            <p className="text-sm text-slate-600">Irreversible actions that affect the entire platform</p>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
-              <div>
-                <Label className="text-sm font-medium text-red-900">Rotate Provider API Keys</Label>
-                <p className="text-xs text-red-700 mt-1">Generate new API keys for the provider</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium text-slate-900">Rotate Provider API Keys</Label>
+                  <p className="text-xs text-slate-600 mt-1">Generate new API keys for the provider</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => setDangerAction('rotate_api_keys')}
+                >
+                  <Key className="w-4 h-4" />
+                  Rotate Keys
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => setDangerAction('rotate_api_keys')}
-                className="border-red-300 text-red-700 hover:bg-red-100"
-              >
-                <Key className="w-4 h-4 mr-2" />
-                Rotate Keys
-              </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
-              <div>
-                <Label className="text-sm font-medium text-red-900">Flush Webhook Logs</Label>
-                <p className="text-xs text-red-700 mt-1">Permanently delete all webhook log entries</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium text-slate-900">Flush Webhook Logs</Label>
+                  <p className="text-xs text-slate-600 mt-1">Permanently delete all webhook log entries</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => setDangerAction('flush_webhook_logs')}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Flush Logs
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => setDangerAction('flush_webhook_logs')}
-                className="border-red-300 text-red-700 hover:bg-red-100"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Flush Logs
-              </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
-              <div>
-                <Label className="text-sm font-medium text-red-900">Recalculate Balances</Label>
-                <p className="text-xs text-red-700 mt-1">Recalculate all account balances (dangerous)</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium text-slate-900">Recalculate Balances</Label>
+                  <p className="text-xs text-slate-600 mt-1">Recalculate all account balances (dangerous)</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => setDangerAction('recalculate_balances')}
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Recalculate
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => setDangerAction('recalculate_balances')}
-                className="border-red-300 text-red-700 hover:bg-red-100"
-              >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Recalculate
-              </Button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
-              <div>
-                <Label className="text-sm font-medium text-red-900">Disable SMS Sending Globally</Label>
-                <p className="text-xs text-red-700 mt-1">Stop all SMS sending across the platform</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm font-medium text-slate-900">Disable SMS Sending Globally</Label>
+                  <p className="text-xs text-slate-600 mt-1">Stop all SMS sending across the platform</p>
+                </div>
+                <Switch
+                  checked={!formData.smsSendingEnabled}
+                  onCheckedChange={(checked) => updateField('smsSendingEnabled', !checked)}
+                  variant="danger"
+                />
               </div>
-              <Switch
-                checked={!formData.smsSendingEnabled}
-                onCheckedChange={(checked) => updateField('smsSendingEnabled', !checked)}
-                className="data-[state=checked]:bg-red-600"
-              />
             </div>
           </div>
         </Card>
@@ -980,10 +995,10 @@ export default function SuperAdminSettingsPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl">Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => dangerAction && handleDangerAction(dangerAction)}
-                className="bg-red-600 hover:bg-red-700 text-white"
+                className="bg-red-600 hover:bg-red-700 text-white rounded-xl"
               >
                 Confirm
               </AlertDialogAction>

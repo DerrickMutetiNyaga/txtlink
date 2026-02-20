@@ -11,7 +11,6 @@ import {
   X,
   LayoutDashboard,
   MessageSquare,
-  FileText,
   Radio,
   BarChart3,
   Key,
@@ -107,7 +106,6 @@ export function PortalLayout({ children, activeSection }: PortalLayoutProps) {
         { label: 'Dashboard', icon: LayoutDashboard, href: '/app/dashboard' },
         { label: 'Send SMS', icon: MessageSquare, href: '/app/send-sms', shortcut: '⌘K' },
         { label: 'SMS History', icon: History, href: '/app/smshistory' },
-        { label: 'Templates', icon: FileText, href: '/app/templates' },
       ],
     },
     {

@@ -172,15 +172,18 @@ export default function SuperAdminAudit() {
             <p className="text-[#64748B] mt-1">System activity and webhook logs</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={fetchLogs} variant="outline" className="border-[#E5E7EB]">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+            <Button
+              onClick={fetchLogs}
+              variant="secondary"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
             <Button
               onClick={exportCSV}
-              className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-medium"
+              variant="secondary"
             >
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4" />
               Export CSV
             </Button>
           </div>
@@ -194,25 +197,25 @@ export default function SuperAdminAudit() {
             setPage(1)
           }}
         >
-          <TabsList className="bg-white border border-[#E5E7EB] p-0 h-auto gap-0">
+          <TabsList className="bg-white border border-slate-200 p-0 h-auto gap-0">
             <TabsTrigger
               value="audit"
-              className="px-6 py-3 text-sm font-medium text-[#64748B] data-[state=active]:text-[#020617] data-[state=active]:border-b-2 data-[state=active]:border-[#FACC15] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=inactive]:hover:text-[#020617] rounded-none border-b-2 border-transparent transition-colors"
+              className="px-6 py-3 text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=inactive]:hover:text-slate-900 rounded-none border-b-2 border-transparent transition-colors"
             >
               Audit Logs
               {auditLogCount > 0 && (
-                <Badge variant="secondary" className="ml-2 bg-[#F1F5F9] text-[#64748B] font-semibold">
+                <Badge variant="secondary" className="ml-2 bg-slate-100 text-slate-600 font-semibold">
                   {auditLogCount}
                 </Badge>
               )}
             </TabsTrigger>
             <TabsTrigger
               value="webhook"
-              className="px-6 py-3 text-sm font-medium text-[#64748B] data-[state=active]:text-[#020617] data-[state=active]:border-b-2 data-[state=active]:border-[#FACC15] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=inactive]:hover:text-[#020617] rounded-none border-b-2 border-transparent transition-colors"
+              className="px-6 py-3 text-sm font-medium text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=inactive]:hover:text-slate-900 rounded-none border-b-2 border-transparent transition-colors"
             >
               Webhook Logs
               {webhookLogCount > 0 && (
-                <Badge variant="secondary" className="ml-2 bg-[#F1F5F9] text-[#64748B] font-semibold">
+                <Badge variant="secondary" className="ml-2 bg-slate-100 text-slate-600 font-semibold">
                   {webhookLogCount}
                 </Badge>
               )}
@@ -221,38 +224,37 @@ export default function SuperAdminAudit() {
 
           <TabsContent value="audit" className="mt-6">
             {/* Filters */}
-            <Card className="bg-white border-[#E5E7EB] border-l-4 border-l-[#FACC15] shadow-sm">
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Filter className="w-5 h-5 text-[#64748B]" />
-                  <h2 className="text-lg font-semibold text-[#020617]">Filters</h2>
+            <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 pb-4 border-b border-slate-200">
+                  <Filter className="w-5 h-5 text-slate-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Filters</h2>
                 </div>
-                <Separator className="mb-6 bg-[#E5E7EB]" />
                 <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">
                       Start Date
                     </label>
                     <Input
                       type="date"
                       value={filters.startDate}
                       onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                      className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">
                       End Date
                     </label>
                     <Input
                       type="date"
                       value={filters.endDate}
                       onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                      className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">
                       Action Type
                     </label>
                     <Select
@@ -261,10 +263,10 @@ export default function SuperAdminAudit() {
                         handleFilterChange('action', value === 'all' ? '' : value)
                       }
                     >
-                      <SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400">
+                      <SelectTrigger className="!w-full !rounded-xl !border !border-slate-200 !bg-white !px-4 !py-2.5 !text-slate-900 !focus:outline-none !focus:ring-2 !focus:ring-emerald-500 !focus:ring-offset-0 !focus:border-emerald-500 !transition [&_svg]:!text-slate-400">
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
                         <SelectItem value="all">All</SelectItem>
                         <SelectItem value="UPDATE_ACCOUNT">UPDATE_ACCOUNT</SelectItem>
                         <SelectItem value="UPDATE_USER_PRICING">UPDATE_USER_PRICING</SelectItem>
@@ -277,7 +279,7 @@ export default function SuperAdminAudit() {
                     </Select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">
                       Resource Type
                     </label>
                     <Select
@@ -286,10 +288,10 @@ export default function SuperAdminAudit() {
                         handleFilterChange('resource', value === 'all' ? '' : value)
                       }
                     >
-                      <SelectTrigger className="bg-white border-slate-200 text-slate-900 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400">
+                      <SelectTrigger className="!w-full !rounded-xl !border !border-slate-200 !bg-white !px-4 !py-2.5 !text-slate-900 !focus:outline-none !focus:ring-2 !focus:ring-emerald-500 !focus:ring-offset-0 !focus:border-emerald-500 !transition [&_svg]:!text-slate-400">
                         <SelectValue placeholder="All" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
                         <SelectItem value="all">All</SelectItem>
                         <SelectItem value="user">user</SelectItem>
                         <SelectItem value="pricingRule">pricingRule</SelectItem>
@@ -299,43 +301,43 @@ export default function SuperAdminAudit() {
                     </Select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">User</label>
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">User</label>
                     <Input
                       value={filters.userId}
                       onChange={(e) => handleFilterChange('userId', e.target.value)}
                       placeholder="Email or ID"
-                      className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">Search</label>
-            <div className="relative">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">Search</label>
+                    <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
+                      <Input
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
                         placeholder="Resource ID, email..."
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400 pl-10"
+                        className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 pl-10 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 mt-6">
+                <div className="flex gap-2 pt-4 border-t border-slate-200">
                   <Button
                     onClick={applyFilters}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-medium"
+                    variant="primary"
                   >
                     Apply Filters
                   </Button>
                   <Button
                     onClick={resetFilters}
-                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium"
+                    variant="secondary"
                   >
                     Reset
                   </Button>
                 </div>
-            </div>
-          </Card>
+              </div>
+            </Card>
 
             {/* Info Text */}
             <p className="text-sm text-[#64748B] mt-2">
@@ -495,16 +497,15 @@ export default function SuperAdminAudit() {
 
           <TabsContent value="webhook" className="mt-6">
             {/* Webhook Filters */}
-            <Card className="bg-white border-[#E5E7EB] border-l-4 border-l-[#FACC15] shadow-sm">
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Filter className="w-5 h-5 text-[#64748B]" />
-                  <h2 className="text-lg font-semibold text-[#020617]">Filters</h2>
+            <Card className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 pb-4 border-b border-slate-200">
+                  <Filter className="w-5 h-5 text-slate-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Filters</h2>
                 </div>
-                <Separator className="mb-6 bg-[#E5E7EB]" />
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-[#020617] mb-1 block">
+                    <label className="text-sm font-medium text-slate-900 mb-2 block">
                       Transaction ID
                     </label>
                     <div className="relative">
@@ -513,21 +514,21 @@ export default function SuperAdminAudit() {
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
                         placeholder="Search by transaction ID..."
-                        className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-yellow-300 focus:border-yellow-400 pl-10"
+                        className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 pl-10 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2 mt-6">
+                <div className="flex gap-2 pt-4 border-t border-slate-200">
                   <Button
                     onClick={applyFilters}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-medium"
+                    variant="primary"
                   >
                     Apply Filters
                   </Button>
                   <Button
                     onClick={resetFilters}
-                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium"
+                    variant="secondary"
                   >
                     Reset
                   </Button>
@@ -914,9 +915,7 @@ export default function SuperAdminAudit() {
                           <pre className="text-xs bg-[#F1F5F9] p-3 rounded border border-[#E5E7EB] overflow-x-auto max-h-64">
                             {JSON.stringify(selectedLog.payload, null, 2)}
                           </pre>
-                          <Button
-                            variant="outline"
-                            size="sm"
+                          <button
                             onClick={() => {
                               const blob = new Blob([JSON.stringify(selectedLog.payload, null, 2)], {
                                 type: 'application/json',
@@ -927,11 +926,11 @@ export default function SuperAdminAudit() {
                               a.download = `webhook-payload-${selectedLog._id}.json`
                               a.click()
                             }}
-                            className="border-[#E5E7EB]"
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
                           >
-                            <Download className="w-4 h-4 mr-2" />
+                            <Download className="w-4 h-4 text-slate-500" />
                             Download Raw Payload
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     )}

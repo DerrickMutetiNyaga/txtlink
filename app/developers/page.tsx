@@ -34,12 +34,12 @@ export default function DevelopersPage() {
         </div>
 
         {/* Quick Links */}
-        <div className="grid md:grid-cols-2 gap-4 mb-12">
+        <div className="grid md:grid-cols-3 gap-4 mb-12">
           <Link href="/developers/quick-start">
-            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-teal-200 hover:border-teal-300">
+            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-slate-200 hover:border-slate-300">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-6 h-6 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">Quick Start</h3>
@@ -51,15 +51,30 @@ export default function DevelopersPage() {
             </Card>
           </Link>
           <Link href="/developers/api/rest">
-            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-teal-200 hover:border-teal-300">
+            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-slate-200 hover:border-slate-300">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <Webhook className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Webhook className="w-6 h-6 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">REST API</h3>
                   <p className="text-sm text-slate-600">
                     Complete API reference
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </Link>
+          <Link href="/developers/authentication">
+            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer border-slate-200 hover:border-slate-300">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Lock className="w-6 h-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-1">Authentication</h3>
+                  <p className="text-sm text-slate-600">
+                    API keys & credentials
                   </p>
                 </div>
               </div>
@@ -73,8 +88,8 @@ export default function DevelopersPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="p-6">
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <Send className="w-5 h-5 text-teal-600" />
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Send className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-2">Transactional SMS</h3>
@@ -88,8 +103,8 @@ export default function DevelopersPage() {
 
             <Card className="p-6">
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <Lock className="w-5 h-5 text-teal-600" />
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Lock className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-2">OTP & Verification</h3>
@@ -103,8 +118,8 @@ export default function DevelopersPage() {
 
             <Card className="p-6">
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <BarChart3 className="w-5 h-5 text-teal-600" />
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <BarChart3 className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-2">Bulk & Promotional SMS</h3>
@@ -118,8 +133,8 @@ export default function DevelopersPage() {
 
             <Card className="p-6">
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
-                  <Webhook className="w-5 h-5 text-teal-600" />
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <Webhook className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-2">APIs & Webhooks</h3>
@@ -143,7 +158,7 @@ export default function DevelopersPage() {
                   <span className="text-sm font-medium text-slate-900">Your Application</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-slate-400" />
-                <div className="px-6 py-3 bg-teal-600 text-white rounded-lg shadow-sm">
+                <div className="px-6 py-3 bg-emerald-600 text-white rounded-lg shadow-sm">
                   <span className="text-sm font-medium">TXTLINK API</span>
                 </div>
                 <ArrowRight className="w-5 h-5 text-slate-400" />
@@ -153,7 +168,7 @@ export default function DevelopersPage() {
               </div>
               <div className="pt-4 border-t border-slate-200">
                 <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
-                  <Shield className="w-4 h-4 text-teal-600" />
+                  <Shield className="w-4 h-4 text-emerald-600" />
                   <span>End-to-end encryption • 99.9% uptime SLA • GDPR compliant</span>
                 </div>
               </div>
@@ -163,7 +178,7 @@ export default function DevelopersPage() {
 
         {/* Start in 5 Minutes */}
         <div className="mb-12">
-          <Card className="p-8 bg-gradient-to-br from-teal-50 to-emerald-50 border-teal-200">
+          <Card className="p-8 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-slate-900 mb-3">
                 Start building in 5 minutes
@@ -174,7 +189,7 @@ export default function DevelopersPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/developers/quick-start">
-                  <Button className="bg-teal-600 text-white hover:bg-teal-700 px-8">
+                  <Button className="bg-emerald-600 text-white hover:bg-emerald-700 rounded-xl px-8 py-2.5">
                     Quick Start Guide
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
@@ -194,42 +209,42 @@ export default function DevelopersPage() {
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Key Features</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">Sub-second Delivery</h4>
                 <p className="text-sm text-slate-600">Ultra-low latency for critical messages</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">99.9% Uptime SLA</h4>
                 <p className="text-sm text-slate-600">Enterprise-grade reliability</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">Multiple SDKs</h4>
                 <p className="text-sm text-slate-600">Node, Python, PHP, Java, Go, Ruby</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">Webhook Support</h4>
                 <p className="text-sm text-slate-600">Real-time delivery reports</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">GDPR Compliant</h4>
                 <p className="text-sm text-slate-600">Enterprise security standards</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-medium text-slate-900 mb-1">REST & SMPP</h4>
                 <p className="text-sm text-slate-600">Choose your integration method</p>

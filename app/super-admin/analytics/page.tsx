@@ -96,17 +96,20 @@ export default function SuperAdminAnalytics() {
             <p className="text-[#64748B] mt-1">Detailed SMS analytics and insights</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={fetchAnalytics} variant="outline" className="border-[#E5E7EB]">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
-            <Button
-              onClick={exportCSV}
-              className="bg-[#FACC15] hover:bg-[#FACC15]/90 text-[#020617] font-medium"
+            <button
+              onClick={fetchAnalytics}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
             >
-              <Download className="w-4 h-4 mr-2" />
+              <RefreshCw className="w-4 h-4 text-slate-500" />
+              Refresh
+            </button>
+            <button
+              onClick={exportCSV}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
+            >
+              <Download className="w-4 h-4 text-slate-500" />
               Export CSV
-            </Button>
+            </button>
           </div>
         </div>
 

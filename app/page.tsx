@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <MarketingLayout>
       {/* Hero Section */}
-      <section className="relative py-20 md:py-24 max-h-[80vh] overflow-hidden border-b border-gray-200 bg-gradient-to-b from-white via-emerald-50/40 to-white">
+      <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 max-h-[90vh] sm:max-h-[85vh] md:max-h-[80vh] overflow-hidden border-b border-gray-200 bg-gradient-to-b from-white via-emerald-50/40 to-white">
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Soft Radial Glow */}
@@ -71,24 +71,24 @@ export default function Home() {
           <div className="absolute bottom-20 right-1/4 w-48 h-48 bg-green-100/30 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
               {/* Main Heading - Outcome-Driven */}
-              <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
+              <div className="space-y-3 sm:space-y-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
                   Reliable SMS Infrastructure Built for Scale
                 </h1>
-                <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
+                <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
                   Send transactional and bulk SMS with 99.9% uptime, verified Sender IDs, and real-time delivery tracking.
                 </p>
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 justify-center lg:justify-start">
                 <Button 
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-6 text-base font-semibold shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105"
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base font-semibold shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 w-full sm:w-auto"
                   size="lg"
                 >
                   Get Started Free
@@ -96,7 +96,7 @@ export default function Home() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 px-8 py-6 text-base font-semibold transition-all duration-300"
+                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base font-semibold transition-all duration-300 w-full sm:w-auto"
                   size="lg"
                 >
                   See Pricing
@@ -104,26 +104,26 @@ export default function Home() {
               </div>
 
               {/* Trust Layer */}
-              <div className="flex flex-wrap gap-6 pt-2 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 sm:gap-6 pt-2 text-xs sm:text-sm text-gray-600 justify-center lg:justify-start">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-600" />
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>No setup fees</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-600" />
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Fast Sender ID approval</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-600" />
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>API ready in minutes</span>
                 </div>
               </div>
             </div>
 
             {/* Right Visual - Modern Dashboard Mockup */}
-            <div className="relative max-w-xl mx-auto lg:mx-0">
+            <div className="relative max-w-full sm:max-w-lg md:max-w-xl mx-auto lg:mx-0 order-first lg:order-last">
               {/* Dashboard Container */}
-              <div className="relative bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden">
+              <div className="relative bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden scale-90 sm:scale-95 md:scale-100">
                 {/* Dashboard Header */}
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -208,8 +208,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Floating UI Cards */}
-              <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float">
+              {/* Floating UI Cards - Hidden on mobile */}
+              <div className="hidden sm:block absolute -top-4 -right-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
                     <MessageSquare className="w-4 h-4 text-emerald-600" />
@@ -221,7 +221,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float" style={{ animationDelay: '0.5s' }}>
+              <div className="hidden sm:block absolute -bottom-4 -left-4 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-20 animate-float" style={{ animationDelay: '0.5s' }}>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
                     <Zap className="w-4 h-4 text-blue-600" />
@@ -237,38 +237,38 @@ export default function Home() {
         </div>
 
         {/* Social Proof - Slightly Visible */}
-        <div className="absolute bottom-0 left-0 right-0 pt-8 pb-4 bg-gradient-to-t from-white via-white/90 to-transparent">
-          <div className="max-w-7xl mx-auto px-6">
-            <p className="text-sm text-gray-500 text-center mb-3">
+        <div className="absolute bottom-0 left-0 right-0 pt-6 sm:pt-8 pb-4 bg-gradient-to-t from-white via-white/90 to-transparent">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <p className="text-xs sm:text-sm text-gray-500 text-center mb-3">
               Trusted by 500+ businesses across fintech, healthcare & e-commerce
             </p>
             {/* Logo Placeholders - Grayscale */}
-            <div className="flex items-center justify-center gap-8 opacity-60">
-              <div className="w-20 h-8 bg-gray-300 rounded"></div>
-              <div className="w-20 h-8 bg-gray-300 rounded"></div>
-              <div className="w-20 h-8 bg-gray-300 rounded"></div>
-              <div className="w-20 h-8 bg-gray-300 rounded"></div>
+            <div className="flex items-center justify-center gap-4 sm:gap-8 opacity-60 flex-wrap">
+              <div className="w-16 sm:w-20 h-6 sm:h-8 bg-gray-300 rounded"></div>
+              <div className="w-16 sm:w-20 h-6 sm:h-8 bg-gray-300 rounded"></div>
+              <div className="w-16 sm:w-20 h-6 sm:h-8 bg-gray-300 rounded"></div>
+              <div className="w-16 sm:w-20 h-6 sm:h-8 bg-gray-300 rounded"></div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Trusted By Section */}
-      <section className="py-20 px-6 border-b border-gray-200 bg-gradient-to-b from-white via-gray-50/50 to-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-gradient-to-b from-white via-gray-50/50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold text-teal-600 mb-3 uppercase tracking-wider">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <p className="text-xs sm:text-sm font-semibold text-teal-600 mb-2 sm:mb-3 uppercase tracking-wider">
               Trusted by Industry Leaders
             </p>
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Trusted by leading organizations worldwide
             </h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4">
               Powering mission-critical communications for enterprises across banking, healthcare, government, and more
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
             {[
               { 
                 name: 'Finance Bank', 
@@ -344,23 +344,23 @@ export default function Home() {
           </div>
           
           {/* Stats Row */}
-          <div className="mt-16 pt-12 border-t border-gray-200">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="mt-10 sm:mt-12 md:mt-16 pt-8 sm:pt-10 md:pt-12 border-t border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
               <div>
-                <div className="text-3xl font-bold text-teal-600 mb-2">500+</div>
-                <div className="text-sm text-gray-600 font-medium">Enterprise Clients</div>
+                <div className="text-2xl sm:text-3xl font-bold text-teal-600 mb-1 sm:mb-2">500+</div>
+                <div className="text-xs sm:text-sm text-gray-600 font-medium">Enterprise Clients</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-teal-600 mb-2">50M+</div>
-                <div className="text-sm text-gray-600 font-medium">Messages/Month</div>
+                <div className="text-2xl sm:text-3xl font-bold text-teal-600 mb-1 sm:mb-2">50M+</div>
+                <div className="text-xs sm:text-sm text-gray-600 font-medium">Messages/Month</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-teal-600 mb-2">99.9%</div>
-                <div className="text-sm text-gray-600 font-medium">Uptime SLA</div>
+                <div className="text-2xl sm:text-3xl font-bold text-teal-600 mb-1 sm:mb-2">99.9%</div>
+                <div className="text-xs sm:text-sm text-gray-600 font-medium">Uptime SLA</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-teal-600 mb-2">24/7</div>
-                <div className="text-sm text-gray-600 font-medium">Support</div>
+                <div className="text-2xl sm:text-3xl font-bold text-teal-600 mb-1 sm:mb-2">24/7</div>
+                <div className="text-xs sm:text-sm text-gray-600 font-medium">Support</div>
               </div>
             </div>
           </div>
@@ -368,16 +368,16 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-20 px-6 border-b border-gray-200 bg-white">
+      <section id="services" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Our Services</h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Comprehensive SMS and messaging solutions tailored for enterprise operations
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 icon: Radio,
@@ -418,13 +418,13 @@ export default function Home() {
             ].map((service, idx) => (
               <Card
                 key={idx}
-                className="p-8 bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                className="p-6 sm:p-8 bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="p-3 rounded-xl bg-teal-100 text-teal-600 w-fit mb-4">
-                  <service.icon className="w-8 h-8" />
+                  <service.icon className="w-6 h-6 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">{service.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   {service.description}
                 </p>
               </Card>
@@ -434,16 +434,16 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section id="why" className="py-20 px-6 border-b border-gray-200 bg-gray-50">
+      <section id="why" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose TXTLINK</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Why Choose TXTLINK</h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Enterprise-grade infrastructure built for reliability and compliance
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
                 icon: BarChart3,
@@ -497,15 +497,15 @@ export default function Home() {
       </section>
 
       {/* API & Developer Section */}
-      <section id="api" className="py-20 px-6 border-b border-gray-200 bg-teal-600 text-white">
+      <section id="api" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-teal-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-4xl font-bold">For Developers</h2>
-              <p className="text-lg text-white/90">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-10 md:gap-12 items-center">
+            <div className="space-y-4 sm:space-y-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">For Developers</h2>
+              <p className="text-base sm:text-lg text-white/90">
                 Powerful APIs designed for seamless integration into any application or platform.
               </p>
-              <ul className="space-y-4">
+              <ul className="space-y-3 sm:space-y-4">
                 {[
                   'REST API with comprehensive documentation',
                   'SMPP protocol support for legacy systems',
@@ -515,18 +515,18 @@ export default function Home() {
                   'Rate limiting and usage analytics',
                 ].map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle size={20} className="flex-shrink-0 mt-0.5" />
-                    <span className="text-sm">{feature}</span>
+                    <CheckCircle size={18} className="flex-shrink-0 mt-0.5 sm:w-5 sm:h-5" />
+                    <span className="text-xs sm:text-sm">{feature}</span>
                   </li>
                 ))}
               </ul>
-              <Button className="bg-white text-teal-600 hover:bg-gray-100 mt-4">
+              <Button className="bg-white text-teal-600 hover:bg-gray-100 mt-4 w-full sm:w-auto">
                 View API Docs <ArrowRight className="ml-2" size={18} />
               </Button>
             </div>
 
             {/* Code Snippet */}
-            <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 font-mono text-sm overflow-x-auto">
+            <div className="bg-gray-900 border border-gray-700 rounded-xl p-4 sm:p-6 font-mono text-xs sm:text-sm overflow-x-auto">
               <pre className="text-gray-100">
 {`// Send SMS with TXTLINK API
 const response = await fetch(
@@ -555,16 +555,16 @@ console.log(result.messageId);`}
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-6 border-b border-gray-200 bg-[#F9FAFB]">
+      <section id="pricing" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-[#F9FAFB]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">{pricingData?.pageTitle || 'Transparent Pricing'}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{pricingData?.pageTitle || 'Transparent Pricing'}</h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               {pricingData?.pageSubtitle || 'Scale your messaging without hidden fees or surprise charges'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 md:mb-12">
             {(() => {
               // Default plans (fallback)
               const defaultPlans = [
@@ -741,36 +741,36 @@ console.log(result.messageId);`}
                       ></div>
 
                       {/* Card Content */}
-                      <div className="relative z-10 p-8 flex flex-col h-full">
+                      <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full">
                         {/* Plan Identity Row */}
-                <div className="mb-6">
-                          <div className="flex items-center gap-4 mb-3">
+                <div className="mb-4 sm:mb-6">
+                          <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
                             <div
-                              className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getIconBgGradient(plan.accentColor)} flex items-center justify-center shadow-lg`}
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${getIconBgGradient(plan.accentColor)} flex items-center justify-center shadow-lg`}
                             >
-                              <IconComponent className="w-6 h-6 text-white" />
+                              <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                             </div>
                             <div>
-                              <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
+                              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{plan.name}</h3>
                               <p className="text-xs text-gray-500 mt-0.5 font-medium">{plan.description}</p>
                             </div>
                           </div>
                           {isHighlighted && plan.highlightReason && (
-                            <div className="flex items-center gap-1.5 text-xs text-teal-700 bg-teal-50 px-3 py-1.5 rounded-md w-fit">
-                              <TrendingUp className="w-3.5 h-3.5" />
+                            <div className="flex items-center gap-1.5 text-xs text-teal-700 bg-teal-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md w-fit">
+                              <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               <span className="font-medium">{plan.highlightReason}</span>
                             </div>
                           )}
                 </div>
 
                         {/* Price Section */}
-                <div className="mb-8">
-                          <div className="flex items-baseline gap-2 mb-2">
-                            <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
+                <div className="mb-6 sm:mb-8">
+                          <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+                            <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">{plan.price}</span>
                             {plan.priceDecimal && (
-                              <span className="text-2xl font-semibold text-gray-500">{plan.priceDecimal}</span>
+                              <span className="text-xl sm:text-2xl font-semibold text-gray-500">{plan.priceDecimal}</span>
                             )}
-                            <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">
+                            <span className="text-xs sm:text-sm font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">
                               {plan.unit}
                             </span>
                   </div>
@@ -847,18 +847,18 @@ console.log(result.messageId);`}
           </div>
 
           {/* Trust Row */}
-          <div className="mb-8">
-            <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-gray-600">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 text-xs sm:text-sm text-gray-600">
               <div className="flex items-center gap-2">
-                <Server className="w-4 h-4 text-teal-600" />
+                <Server className="w-4 h-4 text-teal-600 flex-shrink-0" />
                 <span className="font-medium">Carrier-grade routing</span>
               </div>
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-teal-600" />
+                <TrendingUp className="w-4 h-4 text-teal-600 flex-shrink-0" />
                 <span className="font-medium">99.9% uptime</span>
               </div>
               <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-teal-600" />
+                <Shield className="w-4 h-4 text-teal-600 flex-shrink-0" />
                 <span className="font-medium">SLA available</span>
               </div>
             </div>
@@ -878,22 +878,22 @@ console.log(result.messageId);`}
       </section>
 
       {/* Compliance & Security Section */}
-      <section className="py-16 px-6 border-b border-gray-200 bg-gray-50">
+      <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6 border-b border-gray-200 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-10 md:mb-12">
             Compliance & Security
           </h2>
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {[
               { icon: '🔐', label: 'GDPR Compliant', desc: 'Full data protection compliance' },
               { icon: '⚕️', label: 'HIPAA Certified', desc: 'Healthcare industry standards' },
               { icon: '💳', label: 'PCI-DSS Level 1', desc: 'Highest payment security' },
               { icon: '📋', label: 'Carrier Approved', desc: 'Approved by major carriers' },
             ].map((cert, idx) => (
-              <div key={idx} className="text-center p-6 bg-white border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
-                <div className="text-4xl mb-4">{cert.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">{cert.label}</h3>
-                <p className="text-sm text-gray-600">{cert.desc}</p>
+              <div key={idx} className="text-center p-4 sm:p-6 bg-white border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
+                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{cert.icon}</div>
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-2">{cert.label}</h3>
+                <p className="text-xs sm:text-sm text-gray-600">{cert.desc}</p>
               </div>
             ))}
           </div>
@@ -901,20 +901,20 @@ console.log(result.messageId);`}
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 px-6 border-b border-gray-200 bg-white">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 border-b border-gray-200 bg-white">
+        <div className="max-w-4xl mx-auto text-center space-y-6 sm:space-y-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
             Start Sending SMS at Scale
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4">
             Join hundreds of enterprises using TXTLINK for reliable, compliant messaging
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button className="bg-teal-600 text-white hover:bg-teal-700 px-10 py-6 text-base font-semibold">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button className="bg-teal-600 text-white hover:bg-teal-700 px-6 sm:px-10 py-5 sm:py-6 text-sm sm:text-base font-semibold w-full sm:w-auto">
               Create Account 
               <ArrowRight className="ml-2" size={18} />
             </Button>
-            <Button className="bg-teal-600 text-white hover:bg-teal-700 px-10 py-6 text-base font-semibold">
+            <Button className="bg-teal-600 text-white hover:bg-teal-700 px-6 sm:px-10 py-5 sm:py-6 text-sm sm:text-base font-semibold w-full sm:w-auto">
               Schedule a Demo
             </Button>
           </div>

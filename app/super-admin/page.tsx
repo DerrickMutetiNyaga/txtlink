@@ -166,10 +166,13 @@ export default function SuperAdminDashboard() {
             <AlertCircle className="w-12 h-12 text-rose-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Failed to load dashboard</h3>
             <p className="text-slate-600 mb-6">Unable to fetch dashboard data. Please try again.</p>
-            <Button onClick={fetchDashboard} variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <button
+              onClick={fetchDashboard}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
+            >
+              <RefreshCw className="w-4 h-4 text-slate-500" />
               Retry
-            </Button>
+            </button>
           </Card>
         </div>
       </div>
@@ -191,16 +194,14 @@ export default function SuperAdminDashboard() {
             <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">Dashboard</h1>
             <p className="text-slate-600 mt-1">Platform overview and analytics</p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={fetchDashboard}
             disabled={refreshing}
-            className="border-slate-200/70"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 text-slate-500 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
-          </Button>
+          </button>
         </div>
 
         {/* KPI Cards */}
@@ -270,9 +271,9 @@ export default function SuperAdminDashboard() {
                 <h3 className="text-lg font-semibold text-slate-900">SMS Volume Over Time</h3>
                 <p className="text-sm text-slate-500 mt-1">Last 30 days</p>
               </div>
-              <Button variant="ghost" size="sm">
-                <Download className="w-4 h-4" />
-              </Button>
+              <button className="flex items-center justify-center p-2 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200">
+                <Download className="w-4 h-4 text-slate-500" />
+              </button>
             </div>
             {volumeOverTime && volumeOverTime.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -318,9 +319,9 @@ export default function SuperAdminDashboard() {
                 <h3 className="text-lg font-semibold text-slate-900">Delivery Rate Over Time</h3>
                 <p className="text-sm text-slate-500 mt-1">Last 30 days</p>
               </div>
-              <Button variant="ghost" size="sm">
-                <Download className="w-4 h-4" />
-              </Button>
+              <button className="flex items-center justify-center p-2 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200">
+                <Download className="w-4 h-4 text-slate-500" />
+              </button>
             </div>
             {deliveryOverTime && deliveryOverTime.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
@@ -363,10 +364,10 @@ export default function SuperAdminDashboard() {
               <h3 className="text-lg font-semibold text-slate-900">Top 10 Customers by Volume</h3>
               <p className="text-sm text-slate-500 mt-1">Last 30 days</p>
             </div>
-            <Button variant="outline" size="sm" className="border-slate-200/70">
-              <Download className="w-4 h-4 mr-2" />
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200">
+              <Download className="w-4 h-4 text-slate-500" />
               Export
-            </Button>
+            </button>
           </div>
           {topCustomers && topCustomers.length > 0 ? (
             <div className="overflow-x-auto">

@@ -180,14 +180,12 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
             </div>
 
             {/* Refresh Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden md:flex"
+            <button
               onClick={() => window.location.reload()}
+              className="hidden md:flex items-center justify-center px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
             >
-              <RefreshCw className="w-4 h-4" />
-            </Button>
+              <RefreshCw className="w-4 h-4 text-slate-500" />
+            </button>
 
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative">
@@ -198,39 +196,48 @@ export default function SuperAdminLayout({ children }: { children: React.ReactNo
             {/* Profile Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                <button className="group flex items-center gap-2 px-3 py-2 rounded-xl transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center ring-1 ring-slate-200">
                     <span className="text-xs font-semibold text-emerald-700">
                       {user?.name?.charAt(0).toUpperCase() || 'A'}
                     </span>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-slate-400" />
-                </Button>
+                  <ChevronDown className="w-4 h-4 text-slate-500 transition-colors group-hover:text-slate-700" />
+                </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div>
-                    <p className="font-medium">{user?.name || 'Owner'}</p>
-                    <p className="text-xs text-slate-500">{user?.email || 'admin@signalhub.com'}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('user')
-                    router.push('/auth/login')
-                  }}
-                  className="text-rose-600"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
+              <DropdownMenuContent 
+                align="end" 
+                className="w-[240px] bg-white border border-slate-200 rounded-xl shadow-xl p-2 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 duration-150"
+              >
+                {/* Header Section */}
+                <div className="px-3 py-3">
+                  <p className="text-sm font-semibold text-slate-900">Super Admin</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{user?.email || 'admin@signalhub.com'}</p>
+                </div>
+                <div className="border-t border-slate-200 my-1" />
+
+                {/* Menu Items */}
+                <div className="space-y-1">
+                  <DropdownMenuItem
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg cursor-pointer text-slate-700 hover:bg-slate-100 hover:text-slate-900 focus:bg-slate-100 focus:text-slate-900 transition-colors group"
+                    onClick={() => router.push('/super-admin/settings')}
+                  >
+                    <Settings className="w-4 h-4 text-slate-500 group-hover:text-slate-900 transition-colors" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.removeItem('token')
+                      localStorage.removeItem('user')
+                      router.push('/auth/login')
+                    }}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg cursor-pointer text-slate-700 hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600 transition-colors group"
+                  >
+                    <LogOut className="w-4 h-4 text-slate-500 group-hover:text-red-600 transition-colors" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

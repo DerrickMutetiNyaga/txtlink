@@ -86,7 +86,7 @@ try {
               <Link
                 href="https://github.com/txtlink/node-sdk"
                 target="_blank"
-                className="flex items-center gap-2 text-sm text-teal-600 hover:text-teal-700"
+                className="flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700"
               >
                 GitHub
                 <ExternalLink className="w-4 h-4" />
@@ -155,17 +155,17 @@ try {
           <h3 className="font-semibold text-slate-900 mb-4">Resources</h3>
           <ul className="space-y-2">
             <li>
-              <Link href="https://github.com/txtlink/node-sdk" className="text-teal-600 hover:text-teal-700 text-sm">
+              <Link href="https://github.com/txtlink/node-sdk" className="text-emerald-600 hover:text-emerald-700 text-sm">
                 GitHub Repository
               </Link>
             </li>
             <li>
-              <Link href="/developers/reference/errors" className="text-teal-600 hover:text-teal-700 text-sm">
+              <Link href="/developers/reference/errors" className="text-emerald-600 hover:text-emerald-700 text-sm">
                 Error Reference
               </Link>
             </li>
             <li>
-              <Link href="/developers/api/rest" className="text-teal-600 hover:text-teal-700 text-sm">
+              <Link href="/developers/api/rest" className="text-emerald-600 hover:text-emerald-700 text-sm">
                 REST API Reference
               </Link>
             </li>

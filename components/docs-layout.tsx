@@ -41,18 +41,12 @@ const navigation: NavItem[] = [
       { title: 'Quick Start', href: '/developers/quick-start' },
       { title: 'Authentication', href: '/developers/authentication' },
       { title: 'API Keys', href: '/developers/api-keys' },
-      { title: 'Environments', href: '/developers/environments' },
     ],
   },
   {
     title: 'Guides',
     icon: BookOpen,
     children: [
-      { title: 'Sending SMS', href: '/developers/guides/sending-sms' },
-      { title: 'Bulk SMS', href: '/developers/guides/bulk-sms' },
-      { title: 'OTP & Verification', href: '/developers/guides/otp' },
-      { title: 'Sender IDs', href: '/developers/guides/sender-ids' },
-      { title: 'Delivery Reports', href: '/developers/guides/delivery-reports' },
       { title: 'Webhooks', href: '/developers/guides/webhooks' },
     ],
   },
@@ -61,9 +55,6 @@ const navigation: NavItem[] = [
     icon: Code,
     children: [
       { title: 'REST API', href: '/developers/api/rest' },
-      { title: 'SMPP', href: '/developers/api/smpp' },
-      { title: 'Webhooks API', href: '/developers/api/webhooks' },
-      { title: 'Authentication API', href: '/developers/api/auth' },
     ],
   },
   {
@@ -71,11 +62,6 @@ const navigation: NavItem[] = [
     icon: Terminal,
     children: [
       { title: 'Node.js', href: '/developers/sdks/nodejs' },
-      { title: 'Python', href: '/developers/sdks/python' },
-      { title: 'PHP', href: '/developers/sdks/php' },
-      { title: 'Java', href: '/developers/sdks/java' },
-      { title: 'Go', href: '/developers/sdks/go' },
-      { title: 'Ruby', href: '/developers/sdks/ruby' },
     ],
   },
   {
@@ -83,18 +69,6 @@ const navigation: NavItem[] = [
     icon: FileText,
     children: [
       { title: 'Errors', href: '/developers/reference/errors' },
-      { title: 'Rate Limits', href: '/developers/reference/rate-limits' },
-      { title: 'Status Codes', href: '/developers/reference/status-codes' },
-      { title: 'Compliance & Security', href: '/developers/reference/security' },
-    ],
-  },
-  {
-    title: 'Support',
-    icon: HelpCircle,
-    children: [
-      { title: 'FAQ', href: '/developers/support/faq' },
-      { title: 'Troubleshooting', href: '/developers/support/troubleshooting' },
-      { title: 'Contact Support', href: '/developers/support/contact' },
     ],
   },
 ]

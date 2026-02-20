@@ -342,13 +342,13 @@ export default function SuperAdminPricing() {
                 <SelectItem value="all_time">All time</SelectItem>
               </SelectContent>
             </Select>
-            <Button
+            <button
               onClick={fetchData}
-              className="bg-[#FACC15] hover:bg-[#EAB308] text-[#020617] font-medium"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200"
             >
-              <RefreshCw className="w-4 h-4 mr-2" />
+              <RefreshCw className="w-4 h-4 text-slate-500" />
               Refresh
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -956,44 +956,45 @@ export default function SuperAdminPricing() {
         {/* Edit Marketing Pricing Modal */}
         {showMarketingEditor && editingMarketingPricing && (
           <Dialog open={showMarketingEditor} onOpenChange={setShowMarketingEditor}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-[#E5E7EB] rounded-xl shadow-xl">
-              <DialogHeader className="border-l-4 border-l-teal-500 pl-6">
-                <DialogTitle className="text-xl font-bold text-[#020617]">
+            <DialogContent 
+              overlayClassName="bg-black/40 backdrop-blur-sm"
+              className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-xl p-8 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-150 ease-out [&>button]:text-slate-400 [&>button]:hover:text-slate-700 [&>button]:transition-colors"
+            >
+              <DialogHeader className="pb-5 border-b border-slate-200">
+                <DialogTitle className="text-xl font-semibold text-slate-900">
                   Edit Marketing Pricing
                 </DialogTitle>
-                <DialogDescription className="text-[#64748B] mt-1">
+                <DialogDescription className="text-slate-500 text-sm mt-1.5">
                   Configure the pricing information displayed on public pricing pages
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-6 mt-6">
+              <div className="space-y-8 mt-6">
                 {/* Page Settings */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#020617]">Page Settings</h3>
+                <div className="bg-slate-50 rounded-xl border border-slate-200 p-6 space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-900">Page Settings</h3>
                   <div>
-                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Page Title</Label>
+                    <Label className="text-sm font-medium text-slate-900 mb-2 block">Page Title</Label>
                     <Input
                       value={editingMarketingPricing.pageTitle}
                       onChange={(e) => setEditingMarketingPricing({ ...editingMarketingPricing, pageTitle: e.target.value })}
-                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Page Subtitle</Label>
+                    <Label className="text-sm font-medium text-slate-900 mb-2 block">Page Subtitle</Label>
                     <Input
                       value={editingMarketingPricing.pageSubtitle}
                       onChange={(e) => setEditingMarketingPricing({ ...editingMarketingPricing, pageSubtitle: e.target.value })}
-                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                 </div>
 
-                <Separator className="bg-[#E5E7EB]" />
-
                 {/* Pricing Tiers */}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-[#020617]">Pricing Tiers</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">Pricing Tiers</h3>
                     <Button
                       onClick={() => {
                         setEditingMarketingPricing({
@@ -1017,7 +1018,7 @@ export default function SuperAdminPricing() {
                         })
                       }}
                       size="sm"
-                      className="bg-teal-600 hover:bg-teal-700 text-white"
+                      className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Tier
@@ -1025,247 +1026,250 @@ export default function SuperAdminPricing() {
                   </div>
                   <div className="space-y-4">
                     {editingMarketingPricing.tiers.map((tier, tierIdx) => (
-                      <Card key={tierIdx} className="p-4 border-[#E5E7EB]">
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-medium text-[#020617]">Tier {tierIdx + 1}</h4>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                const newTiers = editingMarketingPricing.tiers.filter((_, i) => i !== tierIdx)
+                      <div key={tierIdx} className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4 relative">
+                        {tier.highlighted && (
+                          <div className="absolute top-4 right-4">
+                            <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium">
+                              Most Popular
+                            </Badge>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-semibold text-slate-900">Tier {tierIdx + 1}</h4>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              const newTiers = editingMarketingPricing.tiers.filter((_, i) => i !== tierIdx)
+                              setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                            }}
+                            className="text-slate-400 hover:text-red-600 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Name</Label>
+                            <Input
+                              value={tier.name}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].name = e.target.value
                                 setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
                               }}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                            />
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Name</Label>
-                              <Input
-                                value={tier.name}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].name = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Price</Label>
-                              <Input
-                                value={tier.price}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].price = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                                placeholder="KSh 2.50"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Unit</Label>
-                              <Input
-                                value={tier.unit}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].unit = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                                placeholder="per SMS"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Description</Label>
-                              <Input
-                                value={tier.description}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].description = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Icon</Label>
-                              <Select
-                                value={tier.icon}
-                                onValueChange={(value) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].icon = value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                              >
-                                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Rocket">Rocket</SelectItem>
-                                  <SelectItem value="ShieldCheck">ShieldCheck</SelectItem>
-                                  <SelectItem value="Building2">Building2</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Accent Color</Label>
-                              <Select
-                                value={tier.accentColor}
-                                onValueChange={(value: 'teal' | 'indigo' | 'slate') => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].accentColor = value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                              >
-                                <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="teal">Teal</SelectItem>
-                                  <SelectItem value="indigo">Indigo</SelectItem>
-                                  <SelectItem value="slate">Slate</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">CTA Button Text</Label>
-                              <Input
-                                value={tier.cta}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].cta = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                              />
-                            </div>
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Secondary CTA</Label>
-                              <Input
-                                value={tier.ctaSecondary}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].ctaSecondary = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={tier.highlighted}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].highlighted = e.target.checked
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="w-4 h-4 text-teal-600 border-[#E5E7EB] rounded"
-                              />
-                              <span className="text-sm text-[#020617]">Highlighted (Most Popular)</span>
-                            </label>
-                          </div>
-                          {tier.highlighted && (
-                            <div>
-                              <Label className="text-sm font-medium text-[#020617] mb-2 block">Highlight Reason</Label>
-                              <Input
-                                value={tier.highlightReason || ''}
-                                onChange={(e) => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].highlightReason = e.target.value
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="border-[#E5E7EB] bg-white text-[#020617]"
-                                placeholder="Best balance of cost + deliverability"
-                              />
-                            </div>
-                          )}
                           <div>
-                            <Label className="text-sm font-medium text-[#020617] mb-2 block">Features</Label>
-                            <div className="space-y-2">
-                              {tier.features.map((feature, featureIdx) => (
-                                <div key={featureIdx} className="flex gap-2">
-                                  <Input
-                                    value={feature.text}
-                                    onChange={(e) => {
-                                      const newTiers = [...editingMarketingPricing.tiers]
-                                      newTiers[tierIdx].features[featureIdx].text = e.target.value
-                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                    }}
-                                    className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
-                                    placeholder="Feature text"
-                                  />
-                                  <Input
-                                    value={feature.category}
-                                    onChange={(e) => {
-                                      const newTiers = [...editingMarketingPricing.tiers]
-                                      newTiers[tierIdx].features[featureIdx].category = e.target.value
-                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                    }}
-                                    className="w-32 border-[#E5E7EB] bg-white text-[#020617]"
-                                    placeholder="Category"
-                                  />
-                                  <label className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={feature.highlight}
-                                      onChange={(e) => {
-                                        const newTiers = [...editingMarketingPricing.tiers]
-                                        newTiers[tierIdx].features[featureIdx].highlight = e.target.checked
-                                        setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                      }}
-                                      className="w-4 h-4 text-teal-600 border-[#E5E7EB] rounded"
-                                    />
-                                    <span className="text-xs text-[#64748B]">Highlight</span>
-                                  </label>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                      const newTiers = [...editingMarketingPricing.tiers]
-                                      newTiers[tierIdx].features = newTiers[tierIdx].features.filter((_, i) => i !== featureIdx)
-                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                    }}
-                                    className="text-red-600 hover:text-red-700"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              ))}
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  const newTiers = [...editingMarketingPricing.tiers]
-                                  newTiers[tierIdx].features.push({ text: '', category: 'Sending', highlight: false })
-                                  setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
-                                }}
-                                className="w-full border-[#E5E7EB] text-[#64748B]"
-                              >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Feature
-                              </Button>
-                            </div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Price</Label>
+                            <Input
+                              value={tier.price}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].price = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                              placeholder="KSh 2.50"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Unit</Label>
+                            <Input
+                              value={tier.unit}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].unit = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                              placeholder="per SMS"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Description</Label>
+                            <Input
+                              value={tier.description}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].description = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Icon</Label>
+                            <Select
+                              value={tier.icon}
+                              onValueChange={(value) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].icon = value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                            >
+                              <SelectTrigger className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 focus:border-emerald-500 transition [&_svg]:text-slate-400">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
+                                <SelectItem value="Rocket">Rocket</SelectItem>
+                                <SelectItem value="ShieldCheck">ShieldCheck</SelectItem>
+                                <SelectItem value="Building2">Building2</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Accent Color</Label>
+                            <Select
+                              value={tier.accentColor}
+                              onValueChange={(value: 'teal' | 'indigo' | 'slate') => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].accentColor = value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                            >
+                              <SelectTrigger className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 focus:border-emerald-500 transition [&_svg]:text-slate-400">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg">
+                                <SelectItem value="teal">Teal</SelectItem>
+                                <SelectItem value="indigo">Indigo</SelectItem>
+                                <SelectItem value="slate">Slate</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">CTA Button Text</Label>
+                            <Input
+                              value={tier.cta}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].cta = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Secondary CTA</Label>
+                            <Input
+                              value={tier.ctaSecondary}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].ctaSecondary = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                            />
                           </div>
                         </div>
-                      </Card>
+                        <div className="flex items-center gap-4 pt-2 border-t border-slate-200">
+                          <label className="flex items-center gap-2.5 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={tier.highlighted}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].highlighted = e.target.checked
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="w-4 h-4 accent-emerald-600 border-slate-300 rounded focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer transition-colors"
+                            />
+                            <span className="text-sm text-slate-900">Highlighted (Most Popular)</span>
+                          </label>
+                        </div>
+                        {tier.highlighted && (
+                          <div>
+                            <Label className="text-sm font-medium text-slate-900 mb-2 block">Highlight Reason</Label>
+                            <Input
+                              value={tier.highlightReason || ''}
+                              onChange={(e) => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].highlightReason = e.target.value
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                              placeholder="Best balance of cost + deliverability"
+                            />
+                          </div>
+                        )}
+                        <div className="pt-2 border-t border-slate-200">
+                          <Label className="text-sm font-medium text-slate-900 mb-3 block">Features</Label>
+                          <div className="space-y-2">
+                            {tier.features.map((feature, featureIdx) => (
+                              <div key={featureIdx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center gap-3">
+                                <Input
+                                  value={feature.text}
+                                  onChange={(e) => {
+                                    const newTiers = [...editingMarketingPricing.tiers]
+                                    newTiers[tierIdx].features[featureIdx].text = e.target.value
+                                    setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                  }}
+                                  className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                  placeholder="Feature text"
+                                />
+                                <Input
+                                  value={feature.category}
+                                  onChange={(e) => {
+                                    const newTiers = [...editingMarketingPricing.tiers]
+                                    newTiers[tierIdx].features[featureIdx].category = e.target.value
+                                    setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                  }}
+                                  className="w-32 rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                                  placeholder="Category"
+                                />
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={feature.highlight}
+                                    onChange={(e) => {
+                                      const newTiers = [...editingMarketingPricing.tiers]
+                                      newTiers[tierIdx].features[featureIdx].highlight = e.target.checked
+                                      setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                    }}
+                                    className="w-4 h-4 accent-emerald-600 border-slate-300 rounded focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer transition-colors"
+                                  />
+                                  <span className="text-xs text-slate-600">Highlight</span>
+                                </label>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newTiers = [...editingMarketingPricing.tiers]
+                                    newTiers[tierIdx].features = newTiers[tierIdx].features.filter((_, i) => i !== featureIdx)
+                                    setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                                  }}
+                                  className="text-slate-400 hover:text-red-600 transition-colors"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const newTiers = [...editingMarketingPricing.tiers]
+                                newTiers[tierIdx].features.push({ text: '', category: 'Sending', highlight: false })
+                                setEditingMarketingPricing({ ...editingMarketingPricing, tiers: newTiers })
+                              }}
+                              className="w-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl"
+                            >
+                              <Plus className="w-4 h-4 mr-2" />
+                              Add Feature
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                <Separator className="bg-[#E5E7EB]" />
-
                 {/* Volume Discounts */}
-                <div className="space-y-4">
+                <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-[#020617]">Volume Discounts</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">Volume Discounts</h3>
                     <Button
                       onClick={() => {
                         setEditingMarketingPricing({
@@ -1277,7 +1281,7 @@ export default function SuperAdminPricing() {
                         })
                       }}
                       size="sm"
-                      className="bg-teal-600 hover:bg-teal-700 text-white"
+                      className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Discount
@@ -1285,7 +1289,7 @@ export default function SuperAdminPricing() {
                   </div>
                   <div className="space-y-2">
                     {editingMarketingPricing.volumeDiscounts.map((discount, discountIdx) => (
-                      <div key={discountIdx} className="flex gap-2 items-center">
+                      <div key={discountIdx} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex gap-2 items-center">
                         <Input
                           value={discount.volume}
                           onChange={(e) => {
@@ -1293,7 +1297,7 @@ export default function SuperAdminPricing() {
                             newDiscounts[discountIdx].volume = e.target.value
                             setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
                           }}
-                          className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
+                          className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                           placeholder="1M - 10M"
                         />
                         <Input
@@ -1303,7 +1307,7 @@ export default function SuperAdminPricing() {
                             newDiscounts[discountIdx].discount = e.target.value
                             setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
                           }}
-                          className="w-32 border-[#E5E7EB] bg-white text-[#020617]"
+                          className="w-32 rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                           placeholder="10%"
                         />
                         <Input
@@ -1313,7 +1317,7 @@ export default function SuperAdminPricing() {
                             newDiscounts[discountIdx].price = e.target.value
                             setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
                           }}
-                          className="flex-1 border-[#E5E7EB] bg-white text-[#020617]"
+                          className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                           placeholder="KSh 2.25"
                         />
                         <Button
@@ -1323,7 +1327,7 @@ export default function SuperAdminPricing() {
                             const newDiscounts = editingMarketingPricing.volumeDiscounts.filter((_, i) => i !== discountIdx)
                             setEditingMarketingPricing({ ...editingMarketingPricing, volumeDiscounts: newDiscounts })
                           }}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-slate-400 hover:text-red-600 transition-colors"
                         >
                           <X className="w-4 h-4" />
                         </Button>
@@ -1332,10 +1336,10 @@ export default function SuperAdminPricing() {
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-[#E5E7EB]">
+                <div className="flex gap-3 pt-4 border-t border-slate-200">
                   <Button
                     onClick={handleSaveMarketingPricing}
-                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-medium"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl shadow-sm active:scale-95 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-150"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Marketing Pricing
@@ -1346,7 +1350,7 @@ export default function SuperAdminPricing() {
                       setShowMarketingEditor(false)
                       setEditingMarketingPricing(null)
                     }}
-                    className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200"
+                    className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl transition-all duration-150"
                   >
                     Cancel
                   </Button>
@@ -1359,39 +1363,42 @@ export default function SuperAdminPricing() {
         {/* Edit Rule Modal */}
         {editingRule && (
           <Dialog open={!!editingRule} onOpenChange={(open) => !open && setEditingRule(null)}>
-            <DialogContent className="max-w-2xl bg-white border-[#E5E7EB] rounded-xl shadow-xl">
-              <DialogHeader className="border-l-4 border-l-[#FACC15] pl-6">
-                <DialogTitle className="text-xl font-bold text-[#020617]">
+            <DialogContent 
+              overlayClassName="bg-black/40 backdrop-blur-sm"
+              className="max-w-2xl bg-white border border-slate-200 rounded-2xl shadow-xl p-8 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-150 ease-out [&>button]:text-slate-400 [&>button]:hover:text-slate-700 [&>button]:transition-colors"
+            >
+              <DialogHeader className="pb-5 border-b border-slate-200">
+                <DialogTitle className="text-xl font-semibold text-slate-900">
                   {editingRule.scope === 'global' ? 'Edit Global Rule' : 'Edit User Override'}
                 </DialogTitle>
-                <DialogDescription className="text-[#64748B] mt-1">
+                <DialogDescription className="text-slate-500 text-sm mt-1.5">
                   {editingRule.scope === 'user' && getAccountForRule(editingRule)
                     ? `${getAccountForRule(editingRule)?.name} (${getAccountForRule(editingRule)?.email})`
                     : 'Configure pricing settings'}
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="space-y-4 mt-6">
+              <div className="space-y-5 mt-6">
                 <div>
-                  <Label className="text-sm font-medium text-[#020617] mb-2 block">Pricing Mode</Label>
+                  <Label className="text-sm font-medium text-slate-900 mb-2 block">Pricing Mode</Label>
                   <Select
                     value={editingRule.mode || 'per_part'}
                     onValueChange={(value) => setEditingRule({ ...editingRule, mode: value })}
                   >
-                    <SelectTrigger className="border-[#E5E7EB] bg-white text-[#020617]">
+                    <SelectTrigger className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 focus:border-emerald-500 [&_svg]:text-slate-400">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border-[#E5E7EB]">
-                      <SelectItem value="per_part">Per Part</SelectItem>
-                      <SelectItem value="per_sms">Per SMS</SelectItem>
-                      <SelectItem value="tiered">Tiered</SelectItem>
+                    <SelectContent className="bg-white border border-slate-200 rounded-xl shadow-lg [&_[data-highlighted]]:bg-emerald-50 [&_[data-highlighted]]:text-emerald-900">
+                      <SelectItem value="per_part" className="focus:bg-emerald-50 focus:text-emerald-900 data-[highlighted]:bg-emerald-50 data-[highlighted]:text-emerald-900">Per Part</SelectItem>
+                      <SelectItem value="per_sms" className="focus:bg-emerald-50 focus:text-emerald-900 data-[highlighted]:bg-emerald-50 data-[highlighted]:text-emerald-900">Per SMS</SelectItem>
+                      <SelectItem value="tiered" className="focus:bg-emerald-50 focus:text-emerald-900 data-[highlighted]:bg-emerald-50 data-[highlighted]:text-emerald-900">Tiered</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {editingRule.mode === 'per_part' && (
                   <div>
-                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Price per Part (KES)</Label>
+                    <Label className="text-sm font-medium text-slate-900 mb-2 block">Price per Part (KES)</Label>
                     <Input
                       type="number"
                       step="0.01"
@@ -1399,14 +1406,14 @@ export default function SuperAdminPricing() {
                       onChange={(e) =>
                         setEditingRule({ ...editingRule, pricePerPart: parseFloat(e.target.value) })
                       }
-                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      className="rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                 )}
 
                 {editingRule.mode === 'per_sms' && (
                   <div>
-                    <Label className="text-sm font-medium text-[#020617] mb-2 block">Price per SMS (KES)</Label>
+                    <Label className="text-sm font-medium text-slate-900 mb-2 block">Price per SMS (KES)</Label>
                     <Input
                       type="number"
                       step="0.01"
@@ -1414,36 +1421,36 @@ export default function SuperAdminPricing() {
                       onChange={(e) =>
                         setEditingRule({ ...editingRule, pricePerSms: parseFloat(e.target.value) })
                       }
-                      className="border-[#E5E7EB] bg-white text-[#020617]"
+                      className="rounded-xl border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                     />
                   </div>
                 )}
 
-                <div className="flex items-center gap-4 pt-4 border-t border-[#E5E7EB]">
-                  <label className="flex items-center gap-2 cursor-pointer">
+                <div className="flex items-center gap-6 pt-5 border-t border-slate-200">
+                  <label className="flex items-center gap-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={editingRule.chargeFailed || false}
                       onChange={(e) => setEditingRule({ ...editingRule, chargeFailed: e.target.checked })}
-                      className="w-4 h-4 text-[#FACC15] border-[#E5E7EB] rounded focus:ring-[#FACC15]"
+                      className="w-4 h-4 accent-emerald-600 border-slate-300 rounded focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer transition-colors"
                     />
-                    <span className="text-sm text-[#020617]">Charge for failed SMS</span>
+                    <span className="text-sm text-slate-900">Charge for failed SMS</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  <label className="flex items-center gap-2.5 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={editingRule.refundOnFail !== false}
                       onChange={(e) => setEditingRule({ ...editingRule, refundOnFail: e.target.checked })}
-                      className="w-4 h-4 text-[#FACC15] border-[#E5E7EB] rounded focus:ring-[#FACC15]"
+                      className="w-4 h-4 accent-emerald-600 border-slate-300 rounded focus:ring-2 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer transition-colors"
                     />
-                    <span className="text-sm text-[#020617]">Refund on failure</span>
+                    <span className="text-sm text-slate-900">Refund on failure</span>
                   </label>
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-[#E5E7EB]">
+                <div className="flex gap-3 pt-5 border-t border-slate-200">
                   <Button
                     onClick={handleSave}
-                    className="flex-1 bg-[#FACC15] hover:bg-[#EAB308] text-[#020617] font-medium"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl shadow-sm active:scale-95 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-150"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Rule
@@ -1451,7 +1458,7 @@ export default function SuperAdminPricing() {
                   <Button
                     variant="outline"
                     onClick={() => setEditingRule(null)}
-                    className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200"
+                    className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-xl transition-all duration-150"
                   >
                     Cancel
                   </Button>
