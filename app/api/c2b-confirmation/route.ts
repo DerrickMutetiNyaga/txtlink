@@ -66,10 +66,15 @@ export async function POST(request: NextRequest) {
     // Use BillRefNumber as account reference (PayBill account number)
     const accountReference = BillRefNumber || InvoiceNumber || 'C2B-PAYMENT'
     
+    // Map M-Pesa TransactionType to model enum value
+    // Model only accepts 'STK' or 'C2B', but M-Pesa sends 'Pay Bill', 'Buy Goods', etc.
+    // All C2B variants (PayBill, Buy Goods) map to 'C2B'
+    const modelTransactionType = 'C2B' // Always use 'C2B' for C2B confirmation endpoint
+    
     if (!mpesaTransaction) {
       // Create new transaction record
       mpesaTransaction = await MpesaTransaction.create({
-        transactionType: TransactionType || 'C2B',
+        transactionType: modelTransactionType,
         transactionId: TransID,
         amount: parseFloat(TransAmount),
         phoneNumber: MSISDN || '', // May be encrypted/hashed in PayBill
@@ -78,7 +83,7 @@ export async function POST(request: NextRequest) {
         responseCode: '0',
         resultDesc: 'Payment confirmed',
         mpesaReceiptNumber: TransID,
-        rawResponse: body, // Contains all M-Pesa data including BusinessShortCode
+        rawResponse: body, // Contains all M-Pesa data including TransactionType: 'Pay Bill'
       })
     } else {
       // Update existing transaction
@@ -87,7 +92,7 @@ export async function POST(request: NextRequest) {
       mpesaTransaction.resultDesc = 'Payment confirmed'
       mpesaTransaction.mpesaReceiptNumber = TransID
       mpesaTransaction.accountReference = accountReference
-      mpesaTransaction.rawResponse = body // Contains all M-Pesa data including BusinessShortCode
+      mpesaTransaction.rawResponse = body // Contains all M-Pesa data including TransactionType: 'Pay Bill'
       await mpesaTransaction.save()
     }
 
