@@ -1,5 +1,5 @@
 /**
- * M-Pesa C2B Validation Handler
+ * C2B Validation Handler
  * POST /api/mpesa/c2b-validation
  * 
  * This endpoint validates C2B payments before they are processed
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     
-    // M-Pesa C2B validation structure
+    // C2B validation structure
     const {
       TransactionType,
       TransID,
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       rawResponse: body,
     })
 
-    // Accept the transaction (M-Pesa will then send confirmation)
+    // Accept the transaction (payment provider will then send confirmation)
     return NextResponse.json({
       ResultCode: 0,
       ResultDesc: 'Accepted',

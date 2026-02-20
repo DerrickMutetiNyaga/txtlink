@@ -1,5 +1,5 @@
 /**
- * M-Pesa C2B Confirmation Handler
+ * C2B Confirmation Handler
  * POST /api/mpesa/c2b-confirmation
  * 
  * This endpoint confirms and processes C2B payments
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     console.log('C2B Confirmation received:', body)
     
-    // M-Pesa C2B confirmation structure
+    // C2B confirmation structure
     const {
       TransactionType,
       TransID,
@@ -45,13 +45,13 @@ export async function POST(request: NextRequest) {
     })
 
     // Find the transaction
-    let mpesaTransaction = await MpesaTransaction.findOne({
+    let paymentTransaction = await MpesaTransaction.findOne({
       transactionId: TransID,
     })
 
-    if (!mpesaTransaction) {
+    if (!paymentTransaction) {
       // Create new transaction if not found (shouldn't happen, but handle it)
-      mpesaTransaction = await MpesaTransaction.create({
+      paymentTransaction = await MpesaTransaction.create({
         transactionType: 'C2B',
         transactionId: TransID,
         amount: parseFloat(TransAmount),
@@ -65,22 +65,22 @@ export async function POST(request: NextRequest) {
       })
     } else {
       // Update existing transaction
-      mpesaTransaction.status = 'success'
-      mpesaTransaction.responseCode = '0'
-      mpesaTransaction.resultDesc = 'Payment confirmed'
-      mpesaTransaction.mpesaReceiptNumber = TransID
-      mpesaTransaction.rawResponse = body
-      await mpesaTransaction.save()
+      paymentTransaction.status = 'success'
+      paymentTransaction.responseCode = '0'
+      paymentTransaction.resultDesc = 'Payment confirmed'
+      paymentTransaction.mpesaReceiptNumber = TransID
+      paymentTransaction.rawResponse = body
+      await paymentTransaction.save()
     }
 
     // Try to find user by account reference or phone number
     let userId: mongoose.Types.ObjectId | undefined
 
     // Account reference might contain user ID or email
-    if (mpesaTransaction.accountReference) {
+    if (paymentTransaction.accountReference) {
       // Try to extract user ID from account reference
       // Format might be: USER-{userId} or {email} or {userId}
-      const ref = mpesaTransaction.accountReference
+      const ref = paymentTransaction.accountReference
       
       // Check if it's a MongoDB ObjectId
       if (mongoose.Types.ObjectId.isValid(ref)) {
@@ -100,18 +100,18 @@ export async function POST(request: NextRequest) {
     }
 
     // If no user found by reference, try phone number
-    if (!userId && mpesaTransaction.phoneNumber) {
-      const phone = mpesaTransaction.phoneNumber.replace(/^254/, '0')
+    if (!userId && paymentTransaction.phoneNumber) {
+      const phone = paymentTransaction.phoneNumber.replace(/^254/, '0')
       const user = await User.findOne({
         $or: [
           { phone: phone },
-          { phone: mpesaTransaction.phoneNumber },
+          { phone: paymentTransaction.phoneNumber },
         ],
       })
       if (user) {
         userId = new mongoose.Types.ObjectId(user._id)
-        mpesaTransaction.userId = userId
-        await mpesaTransaction.save()
+        paymentTransaction.userId = userId
+        await paymentTransaction.save()
       }
     }
 
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
         const userDoc = await User.findById(userId)
 
         if (userDoc) {
-          const amountKes = mpesaTransaction.amount
+          const amountKes = paymentTransaction.amount
           const pricePerCreditKes = getEffectivePricePerCreditKes()
 
           const { creditsToAdd } = convertKesToCredits({
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
             )
 
             // Create transaction record
-            const reference = TransID || `MPESA-C2B-${Date.now()}`
+            const reference = TransID || `C2B-${Date.now()}`
             
             // Check if transaction already exists
             const existingTransaction = await Transaction.findOne({ reference })
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
                 userId,
                 type: 'top-up',
                 amount: amountKes,
-                description: `M-Pesa C2B top-up: ${creditsToAdd} SMS credits @ KSh ${pricePerCreditKes.toFixed(2)} per credit`,
+                description: `C2B top-up: ${creditsToAdd} SMS credits @ KSh ${pricePerCreditKes.toFixed(2)} per credit`,
                 reference,
                 status: 'completed',
                 metadata: {
@@ -166,17 +166,17 @@ export async function POST(request: NextRequest) {
               })
             }
 
-            // Update M-Pesa transaction with invoice ID
-            mpesaTransaction.invoiceId = reference
-            mpesaTransaction.userId = userId
-            await mpesaTransaction.save()
+            // Update payment transaction with invoice ID
+            paymentTransaction.invoiceId = reference
+            paymentTransaction.userId = userId
+            await paymentTransaction.save()
 
             console.log(`C2B top-up successful for user ${userDoc.email}:`, {
               userId: userDoc._id,
               amountKes,
               creditsToAdd,
               newBalance: finalBalance,
-              mpesaReceiptNumber: TransID,
+              receiptNumber: TransID,
             })
           }
         }
@@ -186,14 +186,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Return success response to M-Pesa
+    // Return success response to payment provider
     return NextResponse.json({
       ResultCode: 0,
       ResultDesc: 'Confirmation processed successfully',
     })
   } catch (error: any) {
     console.error('C2B confirmation error:', error)
-    // Still return success to M-Pesa to prevent retries
+    // Still return success to payment provider to prevent retries
     return NextResponse.json({
       ResultCode: 0,
       ResultDesc: 'Confirmation received',
