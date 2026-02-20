@@ -425,7 +425,7 @@ const ApiKeySchema = new Schema<IApiKey>(
 
 // Index for faster lookups
 ApiKeySchema.index({ userId: 1, status: 1 })
-ApiKeySchema.index({ keyHash: 1 })
+// Note: keyHash already has an index from unique: true, so we don't need to add it again
 
 // Transaction Model (for billing/transactions)
 export interface ITransaction {
@@ -457,7 +457,7 @@ const TransactionSchema = new Schema<ITransaction>(
 // Index for faster lookups
 TransactionSchema.index({ userId: 1, createdAt: -1 })
 TransactionSchema.index({ userId: 1, type: 1 })
-TransactionSchema.index({ reference: 1 })
+// Note: reference already has an index from unique: true, so we don't need to add it again
 
 // Payment Method Model
 export interface IPaymentMethod {
