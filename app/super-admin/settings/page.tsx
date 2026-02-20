@@ -810,7 +810,7 @@ export default function SuperAdminSettingsPage() {
                       value={formData.mpesaValidationUrl || ''}
                       onChange={(e) => updateField('mpesaValidationUrl', e.target.value)}
                       className="border-[#E5E7EB] bg-white text-[#020617]"
-                      placeholder="https://yourdomain.com/api/mpesa/c2b-validation"
+                      placeholder="https://yourdomain.com/api/c2b-validation"
                     />
                     <p className="text-xs text-[#64748B] mt-1">URL where M-Pesa sends C2B validation requests</p>
                   </div>
@@ -821,7 +821,7 @@ export default function SuperAdminSettingsPage() {
                       value={formData.mpesaConfirmationUrl || ''}
                       onChange={(e) => updateField('mpesaConfirmationUrl', e.target.value)}
                       className="border-[#E5E7EB] bg-white text-[#020617]"
-                      placeholder="https://yourdomain.com/api/mpesa/c2b-confirmation"
+                      placeholder="https://yourdomain.com/api/c2b-confirmation"
                     />
                     <p className="text-xs text-[#64748B] mt-1">URL where M-Pesa sends C2B confirmation requests</p>
                   </div>
